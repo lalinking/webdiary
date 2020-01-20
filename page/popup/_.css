@@ -1,0 +1,29 @@
+html body {
+    height: auto;
+    background-color: #423333;
+}
+
+.btn-div1 {
+    padding: 0.5em 1em 0 1em;
+}
+
+.btn-div2 {
+    padding: 0 1em 0.5em 1em;
+}
+
+button {
+    border: none;
+    white-space: nowrap;
+    font-size: 0.8em;
+    background: none;
+    cursor: pointer;
+    outline: none;
+    vertical-align: top;
+    color: whitesmoke;
+    border-radius: 3px;
+}
+
+button:hover {
+    font-weight: bolder;
+    background-color: #66666d;
+}

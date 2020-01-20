@@ -1,0 +1,246 @@
+html {
+    overflow: hidden;
+}
+
+.root-div {
+    height: 100%;
+}
+
+.top-div {
+    background-color: #3d69c1;
+    padding: 1em 0.5em;
+    height: 2em;
+}
+
+.top-btn {
+    position: absolute;
+    left: 1em;
+    font-size: 1.5em !important;
+    top: 0.55em;
+    font-weight: bolder;
+    margin: 0 !important;
+    padding: 0 0 0.1em 0 !important;
+}
+
+.top-div:hover .top-btn {
+    background-color: lavender;
+}
+
+.top-div .search-div {
+    margin: 0 auto;
+    width: 50%;
+}
+
+.top-div .search-input {
+    width: calc(100% - 1em);
+    height: 1.5em;
+    padding: 0.2em 0.5em;
+    border: none;
+    outline: none;
+    border-radius: 0.25em;
+}
+
+.content-div {
+    height: calc(100% - 4em);
+    width: 100%;
+    overflow-y: auto;
+    margin-bottom: 20em;
+}
+
+.content-group {
+    margin: 2.5em 3em;
+    background-color: snow;
+    border-radius: 5px;
+    min-height: 8em;
+    position: relative;
+}
+
+.content-group > span {
+    display: inline-block;
+    width: calc(100% - 5em);
+    margin-left: 1em;
+    line-height: 1.6em;
+    font-size: 1.6em;
+    vertical-align: super;
+    font-weight: bold;
+}
+
+.content-group img {
+    height: 1.3em;
+    width: 1.3em;
+    margin: 0.8em 0 0.2em 2em;
+    vertical-align: top;
+}
+
+.btn {
+    min-width: 2em;
+    border: none;
+    font-size: 0.8em;
+    background: none;
+    cursor: pointer;
+    outline: none;
+    border-radius: 3px;
+    line-height: 1.6em;
+    vertical-align: top;
+    padding: 0.3em 0 0.2em 0;
+    margin-top: 0.6em;
+}
+
+.btn:hover {
+    font-weight: bolder;
+}
+
+.content-group:hover .group-btn {
+    background-color: lavender;
+}
+
+.content-item {
+    position: relative;
+    line-height: 2.5em;
+    font-size: 1.1em;
+    padding: 0 2em;
+    white-space: nowrap;
+}
+
+.content-item:nth-of-type(even) {
+    background-color: #f4f9f7;
+}
+
+.content-item-detail {
+    background-color: #242429;
+    color: white;
+    line-height: 1.5em;
+    font-size: 1.2em;
+    position: absolute;
+    border-radius: 5px;
+    padding: 0.4em 1em;
+    max-width: calc(100% - 12em);
+    margin: -6em auto;
+    display: none;
+    left: 9em;
+    pointer-events: none;
+}
+
+.content-item a span.text-ellipsis {
+    max-width: calc(100% - 18em);
+    display: inline-block;
+    vertical-align: top;
+    color: #08165f;
+}
+
+.content-item-detail::after {
+    display: block;
+    content: '';
+    border-width: 0.65em 0.65em 0;
+    border-style: solid;
+    border-color: #242429 transparent transparent transparent;
+    position: absolute;
+    top: 100%;
+    left: 7.4em;
+}
+
+.content-item:hover {
+    box-shadow: 0 -3px 10px -4px #9daf0b;
+}
+
+.item-btn {
+    position: absolute;
+    right: 0.5em;
+    font-size: 1.5em;
+    top: -0.7em;
+    color: red;
+    display: none;
+}
+
+.content-item:hover .item-btn {
+    display: block;
+}
+
+.content-item a:hover .content-item-detail {
+    display: block;
+}
+
+.content-item-date {
+    display: inline-block;
+    width: 11em;
+    text-align: left;
+}
+
+.content-item-visitcount {
+    display: inline-block;
+    width: 7em;
+    text-align: right;
+}
+
+.bookmark, .bookmark-add {
+    color: #0718e8;
+    font-size: 1.1em;
+    position: absolute;
+    cursor: pointer;
+    user-select: none;
+}
+
+.bookmark-add {
+    display: none;
+}
+
+.content-item:hover .bookmark-add {
+    display: block;
+}
+
+.tool-group-div {
+    background-color: #423333;
+    right: 3.1em;
+    margin-top: -0.5em;
+    display: none;
+    text-align: right;
+    padding: 0 1em 0.5em;
+    position: absolute;
+    z-index: 9;
+    border-radius: 7px 0 7px 7px;
+}
+
+.tool-group-div .btn {
+    color: whitesmoke;
+    padding: 2px 5px 0 5px;
+}
+
+.tool-group-div .btn:hover {
+    background-color: #66666d;
+}
+
+.tool-group-div > div {
+    height: 2em;
+    margin: 0 auto;
+}
+
+.msg-div {
+    position: fixed;
+    bottom: -3.4em;
+    text-align: center;
+    left: 0;
+    right: 0;
+    font-size: 1.3em;
+    color: snow;
+    background-color: #3d69c1;
+    padding: 1em;
+    transition: bottom 3s;
+}
+
+.msg-flash {
+    animation: show-msg 4s;
+}
+
+@keyframes show-msg {
+    10% {
+        bottom: 0;
+    }
+
+    70% {
+        bottom: 0;
+    }
+
+    100% {
+        bottom: -3.4em;
+    }
+}

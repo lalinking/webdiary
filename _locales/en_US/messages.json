@@ -1,0 +1,23 @@
+{
+  "main_name": {"message": "Web Record Manager"},
+  "main_desc": {"message": "Open source, small plugins that enhance the functionality of new tabs. Quickly search bookmarks, history. You can easily manage your browsing history and block some useless records on the google search page."},
+  "msg_more": {"message": "More records not shown, please narrow your search"},
+  "msg_nores": {"message": "No records found"},
+  "msg_toomuch": {"message": "Exceeded limit (500), no more site settings can be recorded"},
+  "msg_succeed": {"message": "Processed successfully"},
+  "msg_cancel": {"message": "Operation canceled"},
+  "msg_err": {"message": "error: "},
+  "group_delete": {"message":"Delete site record"},
+  "group_nohistory": {"message": "Delete site record & no longer record"},
+  "group_black": {"message":"Delete site record & no longer record & disable on google search"},
+  "newtab_title": {"message": "New tab"},
+  "newtab_search": {"message": "Search from bookmarks and records (press Enter)"},
+  "newtab_bookmark": {"message": "Bookmark"},
+  "newtab_visitdate": {"message": "at "},
+  "newtab_visitcount": {"message": " visits"},
+  "newtab_addbookmark": {"message": "Add bookmark"},
+  "google_disable_msg": {"message": "This site has been blocked by you (Web Record Manager)"},
+  "setting_title": {"message": "Web Record Manager - Setting"},
+  "setting_about": {"message": "About Me"},
+  "setting_about_content": {"message": "Source code: https://github.com/ric2cn/webdiary"}
+}

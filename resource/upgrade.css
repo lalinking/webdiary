@@ -1,0 +1,38 @@
+::-webkit-scrollbar {
+    width: 10px;
+    background-color: #efefef;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #855f7e;
+    border-radius: 3px;
+}
+
+html, body {
+    background-color: #efefef;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+}
+
+.text-ellipsis {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+a {
+    cursor: pointer;
+    text-decoration: none;
+    color: #bf4f3c;
+    animation: ease-in-out;
+}
+
+a:hover {
+    box-shadow: 0 2px 0 0 #6065a0 !important;
+    border-radius: 0 !important;
+}
+
+.hide {
+    display: none !important;
+}

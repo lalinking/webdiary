@@ -1,0 +1,161 @@
+/**
+ * 扩展数组，实现插入方法
+ */
+Array.prototype.insert = function (index, item) {
+    this.splice(index, 0, item);
+};
+Array.prototype.remove = function (val) {
+    let index = this.indexOf(val);
+    if (index > -1) {
+        this.splice(index - 1, 1);
+    }
+};
+String.prototype.hashCode = function () {
+    let hash = 5381;
+    for (let i = 0; i < this.length; i++) {
+        hash = ((hash << 5) + hash) + this.charCodeAt(i);
+    }
+    return hash;
+};
+Date.prototype.format = function (fmt) { //author: meizz
+    var o = {
+        "M+": this.getMonth() + 1, //月份
+        "d+": this.getDate(), //日
+        "H+": this.getHours(), //小时
+        "m+": this.getMinutes(), //分
+        "s+": this.getSeconds(), //秒
+        "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+        "S": this.getMilliseconds() //毫秒
+    };
+    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+        if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
+};
+/**
+ * 获取当前元素计算后的样式
+ */
+window.getComputedStyle = window.getComputedStyle || function (dom) {
+    return dom.currentStyle;
+};
+
+window.$ = (selector, dom) => {
+    return (dom || document).querySelectorAll(selector)
+};
+
+window.createNode = (html) => {
+    let nod = document.createElement("div");
+    nod.innerHTML = html;
+    return nod.children[0];
+};
+
+/**
+ * obj 作为键值对，遍历obj将obj的key作为name查找页面上所有元素，将其值刷新。<br>
+ * 传入{mydiv:"dis"}，则页面上所有name为mydiv的元素value 或 innerText设置为 "dis"
+ */
+window.bind = (obj, dom) => {
+    dom = dom || document;
+    let _obj = {...obj};
+    let _fs = function (name, value) {
+        [].slice.call(dom.querySelectorAll(`[name="${name}"]`)).forEach(e => {
+            let bindProty = e.getAttribute("data-bind");
+            if (bindProty) {
+                return e.setAttribute(bindProty, value);
+            }
+            if (e.tagName === "INPUT") {
+                e.value = value;
+            } else if (e.tagName === "SELECT") {
+                let ops = $(`option[value=${value}]`);
+                if (ops.length === 0) {
+                    let newOp = new Option(value, value);
+                    e.add(newOp);
+                    newOp.selected = true;
+                } else {
+                    ops[0].selected = true;
+                }
+            } else if (e.tagName === "A") {
+                e.innerText = value;
+                e.textContent = value;
+                if (!e.href) {
+                    e.href = value;
+                }
+            } else if (e.tagName === "META") {
+                e.setAttribute("content", value)
+            } else {
+                e.innerText = value;
+                e.textContent = value;
+            }
+        });
+    };
+    for (let _name in obj) {
+        _fs(_name, obj[_name]);
+        Object.defineProperty(obj, _name, {
+            set: function (v) {
+                _obj[_name] = v;
+                _fs(_name, v);
+            },
+            get: function () {
+                return _obj[_name];
+            }
+        })
+    }
+};
+
+window.Sync = function(auto) {
+    this.maxThread = 1;
+    let _stime;
+    let _lis = [];
+    let sflag = 0;
+    let _this = this;
+    let _next = () => {
+        setTimeout(() => {
+            if (_lis.length === 0) {
+                sflag--;
+                if (sflag === 0) {
+                    _this.end && _this.end(Date.now() - _stime);
+                    _stime = null;
+                }
+                return
+            }
+            let l = _lis.shift();
+            try {
+                l.call(_this)
+            } catch (e) {
+                console.error(e)
+            }
+            auto && _next()
+        }, 0)
+    };
+    this.call = (fun) => {
+        _lis.push(fun);
+        if (sflag < this.maxThread) {
+            if (!_stime) {
+                _stime = Date.now();
+            }
+            sflag++;
+            _next()
+        }
+        return this
+    };
+    this.ignoreNext = () => {
+        _lis.shift();
+    };
+    this.interrupt = () => {
+        _lis.length = 0;
+        _this.err = "interrupt";
+    };
+    this.next = _next
+};
+
+window.i18n = msg => {
+    return chrome.i18n.getMessage(msg)
+};
+
+window.getUrlGroupName = url => {
+    return url.replace(/^[^:]+:\/*([^/]+(.[^/])*?)\/.*$/, "$1");
+};
+
+window.getGroupStoreKey = groupName => {
+    let hashCode = groupName.hashCode();
+    return hashCode > 0 ? ("g" + hashCode) : ("h" + Math.abs(hashCode));
+};

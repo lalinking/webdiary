@@ -1,0 +1,23 @@
+{
+  "main_name": {"message": "WEB 足迹管家"},
+  "main_desc": {"message": "开源的、强化新页签功能的小插件。可以快速搜索书签、历史记录。可以方便的管理浏览记录、在 google 搜索页面屏蔽一些无用的记录。"},
+  "msg_more": {"message": "更多记录未显示，请缩小搜索范围"},
+  "msg_nores": {"message": "未找到任何记录"},
+  "msg_toomuch": {"message": "超过限制数量（500），无法记录更多网站设置"},
+  "msg_succeed": {"message": "已处理成功"},
+  "msg_cancel": {"message": "已取消操作"},
+  "msg_err": {"message": "出错了："},
+  "group_delete": {"message":"删除站点记录"},
+  "group_nohistory": {"message": "删除站点记录 + 不再记录"},
+  "group_black": {"message":"删除站点记录 + 不再记录 + 在谷歌禁用"},
+  "newtab_title": {"message": "新页签"},
+  "newtab_search": {"message": "从书签、记录中搜索 （按回车键）"},
+  "newtab_bookmark": {"message": "书签"},
+  "newtab_visitdate": {"message": "于 "},
+  "newtab_visitcount": {"message": " 次访问"},
+  "newtab_addbookmark": {"message": "添加书签"},
+  "google_disable_msg": {"message": "该站点已被您屏蔽（WEB 足迹管家）"},
+  "setting_title": {"message": "WEB 足迹管家 - 设置"},
+  "setting_about": {"message": "关于本插件"},
+  "setting_about_content": {"message": "开源、免费、好用的 Chrome 插件。\n\t源代码： https://github.com/ric2cn/webdiary"}
+}
