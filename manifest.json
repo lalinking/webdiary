@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "__MSG_main_name__",
   "description": "__MSG_main_desc__",
-  "version": "1.0",
+  "version": "1.1",
   "default_locale": "zh_CN",
   "chrome_url_overrides": {
     "newtab": "/page/newtab/_.html"
