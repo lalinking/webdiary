@@ -1,81 +1,53 @@
-$("#btn_nohistory")[0].addEventListener("click", e => {
-    chrome.tabs.query({active: true}, tabs => {
-        if (!tabs[0].url) {
-            return
+chrome.tabs.query({active: true}, tabs => {
+    let url = tabs[0].url;
+    if (!url) {
+        window.close()
+    }
+    let groupName = getUrlGroupName(tabs[0].url);
+    let storeKey = getGroupStoreKey(groupName);
+    let btn3 = $("#btn_remove")[0];
+    chrome.storage.sync.get(storeKey, res => {
+        let re = res[storeKey];
+        let btn1 = $("#btn_nohistory")[0];
+        if (re && re.nohistory) {
+            btn1.parentElement.appendChild(createNode("<span>√ </span>"));
+            btn3.parentElement.className = "btn-div3"
         }
-        let groupName = getUrlGroupName(tabs[0].url);
-        let storeKey = getGroupStoreKey(groupName);
-        let _sync = new Sync();
-        _sync.end = () => {
-            window.close()
-        };
-        _sync.call(() => {
-            chrome.storage.sync.get("size", res => {
-                if (!res.size || res.size < 500) {
-                    _sync.next()
+        btn1.addEventListener("click", () => {
+            let _sync = setStore(storeKey, {nohistory: true, name: groupName, time: Date.now()});
+            _sync.end = () => {
+                if (_sync.err) {
+                    alert(_sync.err)
                 } else {
-                    alert(i18n("msg_toomuch"));
-                    _sync.interrupt()
+                    window.close()
                 }
-            })
-        }).call(() => {
-            let storeValue = {};
-            storeValue[storeKey] = {nohistory: true, name: groupName, time: Date.now()};
-            chrome.storage.sync.set(storeValue, _sync.next);
+            }
+        });
+        let btn2 = $("#btn_black")[0];
+        if (re && re.disable) {
+            if (re && re.disable) {
+                btn2.parentElement.appendChild(createNode("<span>√ </span>"));
+                btn3.parentElement.className = "btn-div3"
+            }
+        }
+        btn2.addEventListener("click", () => {
+            let _sync = setStore(storeKey, {disable: true, nohistory: true, name: groupName, time: Date.now()})
+            _sync.end = () => {
+                if (_sync.err) {
+                    alert(_sync.err)
+                } else {
+                    window.close()
+                }
+            }
         });
     });
+    btn3.addEventListener("click", () => {
+        chrome.storage.sync.remove(storeKey, window.close)
+    })
 });
-
-$("#btn_black")[0].addEventListener("click", e => {
-    chrome.tabs.query({active: true}, tabs => {
-        if (!tabs[0].url) {
-            return
-        }
-        let groupName = getUrlGroupName(tabs[0].url);
-        let storeKey = getGroupStoreKey(groupName);
-        let _sync = new Sync();
-        _sync.end = () => {
-            window.close()
-        };
-        _sync.call(() => {
-            chrome.storage.sync.get("size", res => {
-                if (!res.size || res.size < 500) {
-                    _sync.next()
-                } else {
-                    alert(i18n("msg_toomuch"));
-                    _sync.interrupt()
-                }
-            })
-        }).call(() => {
-            chrome.permissions.contains({
-                origins: ['https://www.google.com/']
-            }, res => {
-                if (res) {
-                    _sync.ignoreNext()
-                }
-                _sync.next()
-            });
-        }).call(() => {
-            chrome.permissions.request({
-                origins: ['https://www.google.com/']
-            }, granted => {
-                if (!granted) {
-                    showInfo(i18n("msg_cancel"));
-                    _sync.interrupt()
-                } else {
-                    _sync.next()
-                }
-            });
-        }).call(() => {
-            let storeValue = {};
-            storeValue[storeKey] = {nohistory: true, disable: true, name: groupName, time: Date.now()};
-            chrome.storage.sync.set(storeValue, _sync.next)
-        });
-    });
-});
-
 
 bind({
     ui_btn_nohistory: i18n("group_nohistory"),
-    ui_btn_black: i18n("group_black")
+    ui_btn_black: i18n("group_black"),
+    ui_btn_remove: i18n("btn_remove")
 }, document);

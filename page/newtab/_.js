@@ -228,74 +228,26 @@ const groupClickFun = (e, div) => {
         if (!confirm(i18n("group_nohistory"))) {
             return true;
         }
-        let _sync = new Sync();
+        let _sync = setStore(storeKey, {nohistory: true, name: groupName, time: Date.now()});
         _sync.end = () => {
-            if (chrome.runtime.lastError) {
-                showInfo(i18n("msg_err") + chrome.runtime.lastError.message)
+            if (_sync.err) {
+                showInfo(_sync.err)
             } else {
                 removeSiteHistory(groupName, _div)
             }
-        };
-        _sync.call(() => {
-            chrome.storage.sync.get("size", res => {
-                if (!res.size || res.size < 500) {
-                    _sync.next()
-                } else {
-                    showInfo(i18n("msg_toomuch"));
-                    _sync.interrupt()
-                }
-            })
-        }).call(() => {
-            let storeValue = {};
-            storeValue[storeKey] = {nohistory: true, name: groupName, time: Date.now()};
-            chrome.storage.sync.set(storeValue, _sync.next);
-        });
+        }
     } else if (e.target.className === "btn group-black") {
         if (!confirm(i18n("group_black"))) {
             return true
         }
-        let _sync = new Sync();
+        let _sync = setStore(storeKey, {disable: true, nohistory: true, name: groupName, time: Date.now()});
         _sync.end = () => {
-            if (chrome.runtime.lastError) {
-                showInfo(i18n("msg_err") + chrome.runtime.lastError.message)
+            if (_sync.err) {
+                showInfo(_sync.err)
             } else {
                 removeSiteHistory(groupName, _div)
             }
-        };
-        _sync.call(() => {
-            chrome.storage.sync.get("size", res => {
-                if (!res.size || res.size < 500) {
-                    _sync.next()
-                } else {
-                    showInfo(i18n("msg_toomuch"));
-                    _sync.interrupt()
-                }
-            })
-        }).call(() => {
-            chrome.permissions.contains({
-                origins: ['https://www.google.com/']
-            }, res => {
-                if (res) {
-                    _sync.ignoreNext()
-                }
-                _sync.next()
-            });
-        }).call(() => {
-            chrome.permissions.request({
-                origins: ['https://www.google.com/']
-            }, granted => {
-                if (!granted) {
-                    showInfo(i18n("msg_cancel"));
-                    _sync.interrupt()
-                } else {
-                    _sync.next()
-                }
-            });
-        }).call(() => {
-            let storeValue = {};
-            storeValue[storeKey] = {nohistory: true, disable: true, name: groupName, time: Date.now()};
-            chrome.storage.sync.set(storeValue, _sync.next)
-        });
+        }
     }
 };
 

@@ -7,6 +7,7 @@
   "msg_succeed": {"message": "已处理成功"},
   "msg_cancel": {"message": "已取消操作"},
   "msg_err": {"message": "出错了："},
+  "btn_remove": {"message": "移除"},
   "group_delete": {"message":"删除站点记录"},
   "group_nohistory": {"message": "删除站点记录 + 不再记录"},
   "group_black": {"message":"删除站点记录 + 不再记录 + 在谷歌禁用"},

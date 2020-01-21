@@ -7,6 +7,7 @@
   "msg_succeed": {"message": "Processed successfully"},
   "msg_cancel": {"message": "Operation canceled"},
   "msg_err": {"message": "error: "},
+  "btn_remove": {"message": "Remove"},
   "group_delete": {"message":"Delete site record"},
   "group_nohistory": {"message": "Delete site record & no longer record"},
   "group_black": {"message":"Delete site record & no longer record & disable on google search"},

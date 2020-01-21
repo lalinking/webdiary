@@ -140,9 +140,9 @@ window.Sync = function(auto) {
     this.ignoreNext = () => {
         _lis.shift();
     };
-    this.interrupt = () => {
+    this.interrupt = (err) => {
         _lis.length = 0;
-        _this.err = "interrupt";
+        _this.err = err || "interrupt";
     };
     this.next = _next
 };
@@ -158,4 +158,46 @@ window.getUrlGroupName = url => {
 window.getGroupStoreKey = groupName => {
     let hashCode = groupName.hashCode();
     return hashCode > 0 ? ("g" + hashCode) : ("h" + Math.abs(hashCode));
+};
+
+window.setStore = (storeKey, data) => {
+    let _sync = new Sync();
+    return _sync.call(() => {
+        chrome.storage.sync.get("size", res => {
+            if (!res.size || res.size < 500) {
+                _sync.next()
+            } else {
+                _sync.interrupt(i18n("msg_toomuch"))
+            }
+        })
+    }).call(() => {
+        chrome.permissions.contains({
+            origins: ['https://www.google.com/']
+        }, res => {
+            if (res || !data.disable) {
+                _sync.ignoreNext()
+            }
+            _sync.next()
+        });
+    }).call(() => {
+        chrome.permissions.request({
+            origins: ['https://www.google.com/']
+        }, granted => {
+            if (!granted) {
+                _sync.interrupt(i18n("msg_cancel"))
+            } else {
+                _sync.next()
+            }
+        });
+    }).call(() => {
+        let storeValue = {};
+        storeValue[storeKey] = data;
+        chrome.storage.sync.set(storeValue, _sync.next)
+    }).call(() => {
+        if (chrome.runtime.lastError) {
+            _sync.interrupt(i18n("msg_err") + chrome.runtime.lastError.message)
+        } else {
+            _sync.next()
+        }
+    });
 };
