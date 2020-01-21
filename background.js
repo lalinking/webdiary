@@ -33,4 +33,13 @@ function loadDataSucceed(data) {
         }
         chrome.storage.sync.set({size: Object.keys(data).length - 1})
     });
+
+    chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+        if (!tab.url || changeInfo.status !== "loading") {
+            return
+        }
+        chrome.tabs.executeScript(tabId, {file: "/resource/upgrade.js", runAt: "document_start"});
+        chrome.tabs.insertCSS(tabId, {file: "/page/google/_.css", runAt: "document_start"});
+        chrome.tabs.executeScript(tabId, {file: "/page/google/_.js", runAt: "document_end"});
+    });
 }

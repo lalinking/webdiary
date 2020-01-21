@@ -2,7 +2,10 @@
   "manifest_version": 2,
   "name": "__MSG_main_name__",
   "description": "__MSG_main_desc__",
-  "version": "1.1",
+  "version": "1.2",
+  "icons": {
+    "48": "/resource/icon48.png"
+  },
   "default_locale": "zh_CN",
   "chrome_url_overrides": {
     "newtab": "/page/newtab/_.html"
@@ -14,7 +17,7 @@
   },
   "browser_action": {
     "default_title": "__MSG_main_name__ \n __MSG_group_nohistory__ \n __MSG_group_black__",
-    "default_icon": "/resource/icon38.png",
+    "default_icon": "/resource/icon48.png",
     "default_popup": "/page/popup/_.html"
   },
   "permissions": [
@@ -26,20 +29,5 @@
   "optional_permissions": [
     "https://*/",
     "http://*/"
-  ],
-  "content_scripts": [
-    {
-      "run_at": "document_end",
-      "matches": [
-        "https://www.google.com/*"
-      ],
-      "js": [
-        "/resource/upgrade.js",
-        "/page/google/_.js"
-      ],
-      "css": [
-        "/page/google/_.css"
-      ]
-    }
   ]
 }
