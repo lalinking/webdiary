@@ -94,6 +94,25 @@ html {
     background-color: lavender;
 }
 
+.showmore {
+    display: none;
+}
+
+.large-group .showmore {
+    display: block;
+    text-align: center;
+    cursor: pointer;
+    padding: 0.5em;
+}
+
+.large-group:hover .showmore {
+    color: red;
+}
+
+.large-group .content-item-more {
+    display: none;
+}
+
 .content-item {
     position: relative;
     line-height: 2.5em;
@@ -140,7 +159,7 @@ html {
 }
 
 .content-item:hover {
-    box-shadow: 0 -3px 10px -4px #9daf0b;
+    background-color: #c4f6d9;
 }
 
 .item-btn {

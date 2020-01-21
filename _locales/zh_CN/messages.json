@@ -16,6 +16,7 @@
   "newtab_visitdate": {"message": "于 "},
   "newtab_visitcount": {"message": " 次访问"},
   "newtab_addbookmark": {"message": "添加书签"},
+  "newtab_showmore": {"message": "点击查看更多"},
   "google_disable_msg": {"message": "该站点已被您屏蔽（WEB 足迹管家）"},
   "setting_title": {"message": "WEB 足迹管家 - 设置"},
   "setting_about": {"message": "关于本插件"},

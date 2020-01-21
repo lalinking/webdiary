@@ -13,6 +13,10 @@ const search = searchingKey => {
         } else if (contentMap.size === 0) {
             showInfo(i18n("msg_nores"))
         }
+        $(".content-item-more:last-child").forEach(item => {
+            item.parentElement.className += " large-group";
+            item.parentElement.appendChild(createNode(`<div class="showmore">${i18n("newtab_showmore")}</div>`))
+        })
     };
     if (searchingKey) {
         sync.call(() => {
@@ -102,7 +106,11 @@ const appendResult = (info) => {
     let countAndDate = `<span class="content-item-visitcount ">${info.visitCount}</span><span class="content-item-date">${info.lastVisitTime}</span>`;
     let detail = `<div class="content-item-detail"><div class="text-ellipsis">${info.title}<br>${info.url}</div></div>`;
     let itemA = `<a target="_blank" href="${info.url}">${detail}<span class="text-ellipsis">${info.title}</span></a>`;
-    $group.appendChild(createNode(`<div class="content-item" id="item-${number}">${bookmark}${countAndDate}${itemA}<button class="btn item-btn">×</button></div>`))
+    let item = createNode(`<div class="content-item" id="item-${number}">${bookmark}${countAndDate}${itemA}<button class="btn item-btn">×</button></div>`);
+    $group.appendChild(item);
+    if ($group.children.length > 14) {
+        item.className += " content-item-more";
+    }
 };
 
 const showInfo = msg => {
@@ -192,6 +200,105 @@ $search.addEventListener("keyup", e => {
     search(searchingKey);
 });
 
+const itemClickFun = (e, div) => {
+    let key = parseInt(div.id.replace("item-", ""));
+    if (!contentMap.has(key)) {
+        return true;
+    }
+    let info = contentMap.get(key);
+    if (e.target.className === "bookmark-add") {
+        addToMarkbook(info, e.target)
+    } else if (e.target.className === "bookmark") {
+        removeMarkbook(info, e.target)
+    } else if (e.target.className === "btn item-btn") {
+        removeHistory(info, div)
+    }
+};
+
+const groupClickFun = (e, div) => {
+    let groupName = $("span", div)[0].innerText;
+    let _div = div;
+    let storeKey = getGroupStoreKey(groupName);
+    if (e.target.className === "btn group-btn") {
+        $(".tool-group-div", div)[0].style.display = "block";
+        return true
+    } else if (e.target.className === "btn group-delete") {
+        removeSiteHistory(groupName, div)
+    } else if (e.target.className === "btn group-nohistory") {
+        if (!confirm(i18n("group_nohistory"))) {
+            return true;
+        }
+        let _sync = new Sync();
+        _sync.end = () => {
+            if (chrome.runtime.lastError) {
+                showInfo(i18n("msg_err") + chrome.runtime.lastError.message)
+            } else {
+                removeSiteHistory(groupName, _div)
+            }
+        };
+        _sync.call(() => {
+            chrome.storage.sync.get("size", res => {
+                if (!res.size || res.size < 500) {
+                    _sync.next()
+                } else {
+                    showInfo(i18n("msg_toomuch"));
+                    _sync.interrupt()
+                }
+            })
+        }).call(() => {
+            let storeValue = {};
+            storeValue[storeKey] = {nohistory: true, name: groupName, time: Date.now()};
+            chrome.storage.sync.set(storeValue, _sync.next);
+        });
+    } else if (e.target.className === "btn group-black") {
+        if (!confirm(i18n("group_black"))) {
+            return true
+        }
+        let _sync = new Sync();
+        _sync.end = () => {
+            if (chrome.runtime.lastError) {
+                showInfo(i18n("msg_err") + chrome.runtime.lastError.message)
+            } else {
+                removeSiteHistory(groupName, _div)
+            }
+        };
+        _sync.call(() => {
+            chrome.storage.sync.get("size", res => {
+                if (!res.size || res.size < 500) {
+                    _sync.next()
+                } else {
+                    showInfo(i18n("msg_toomuch"));
+                    _sync.interrupt()
+                }
+            })
+        }).call(() => {
+            chrome.permissions.contains({
+                origins: ['https://www.google.com/']
+            }, res => {
+                if (res) {
+                    _sync.ignoreNext()
+                }
+                _sync.next()
+            });
+        }).call(() => {
+            chrome.permissions.request({
+                origins: ['https://www.google.com/']
+            }, granted => {
+                if (!granted) {
+                    showInfo(i18n("msg_cancel"));
+                    _sync.interrupt()
+                } else {
+                    _sync.next()
+                }
+            });
+        }).call(() => {
+            let storeValue = {};
+            storeValue[storeKey] = {nohistory: true, disable: true, name: groupName, time: Date.now()};
+            chrome.storage.sync.set(storeValue, _sync.next)
+        });
+    }
+};
+
 $contentDiv.addEventListener("click", e => {
     $(".tool-group-div").forEach(dom => {
         dom.style.display = ""
@@ -199,100 +306,15 @@ $contentDiv.addEventListener("click", e => {
     let div = e.target;
     while (div) {
         if (div.className === "content-item") {
-            let key = parseInt(div.id.replace("item-", ""));
-            if (!contentMap.has(key)) {
-                break;
-            }
-            let info = contentMap.get(key);
-            if (e.target.className === "bookmark-add") {
-                addToMarkbook(info, e.target)
-            } else if (e.target.className === "bookmark") {
-                removeMarkbook(info, e.target)
-            } else if (e.target.className === "btn item-btn") {
-                removeHistory(info, div)
-            }
-        } else if (div.className === "content-group") {
-            let groupName = $("span", div)[0].innerText;
-            let _div = div;
-            let storeKey = getGroupStoreKey(groupName);
-            if (e.target.className === "btn group-btn") {
-                $(".tool-group-div", div)[0].style.display = "block";
+            if (itemClickFun(e, div)) {
                 return
-            } else if (e.target.className === "btn group-delete") {
-                removeSiteHistory(groupName, div)
-            } else if (e.target.className === "btn group-nohistory") {
-                if (!confirm(i18n("group_nohistory"))) {
-                    break
-                }
-                let _sync = new Sync();
-                _sync.end = () => {
-                    if (chrome.runtime.lastError) {
-                        showInfo(i18n("msg_err") + chrome.runtime.lastError.message)
-                    } else {
-                        removeSiteHistory(groupName, _div)
-                    }
-                };
-                _sync.call(() => {
-                    chrome.storage.sync.get("size", res => {
-                        if (!res.size || res.size < 500) {
-                            _sync.next()
-                        } else {
-                            showInfo(i18n("msg_toomuch"));
-                            _sync.interrupt()
-                        }
-                    })
-                }).call(() => {
-                    let storeValue = {};
-                    storeValue[storeKey] = {nohistory: true, name: groupName, time: Date.now()};
-                    chrome.storage.sync.set(storeValue, _sync.next);
-                });
-            } else if (e.target.className === "btn group-black") {
-                if (!confirm(i18n("group_black"))) {
-                    break
-                }
-                let _sync = new Sync();
-                _sync.end = () => {
-                    if (chrome.runtime.lastError) {
-                        showInfo(i18n("msg_err") + chrome.runtime.lastError.message)
-                    } else {
-                        removeSiteHistory(groupName, _div)
-                    }
-                };
-                _sync.call(() => {
-                    chrome.storage.sync.get("size", res => {
-                        if (!res.size || res.size < 500) {
-                            _sync.next()
-                        } else {
-                            showInfo(i18n("msg_toomuch"));
-                            _sync.interrupt()
-                        }
-                    })
-                }).call(() => {
-                    chrome.permissions.contains({
-                        origins: ['https://www.google.com/']
-                    }, res => {
-                        if (res) {
-                            _sync.ignoreNext()
-                        }
-                        _sync.next()
-                    });
-                }).call(() => {
-                    chrome.permissions.request({
-                        origins: ['https://www.google.com/']
-                    }, granted => {
-                        if (!granted) {
-                            showInfo(i18n("msg_cancel"));
-                            _sync.interrupt()
-                        } else {
-                            _sync.next()
-                        }
-                    });
-                }).call(() => {
-                    let storeValue = {};
-                    storeValue[storeKey] = {nohistory: true, disable: true, name: groupName, time: Date.now()};
-                    chrome.storage.sync.set(storeValue, _sync.next)
-                });
             }
+        } else if (div.className === "content-group" || div.className === "content-group large-group") {
+            if (groupClickFun(e, div)) {
+                return
+            }
+        } else if (div.className === "showmore") {
+            div.parentElement.className = "content-group"
         }
         div = div.parentElement;
     }

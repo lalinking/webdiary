@@ -16,6 +16,7 @@
   "newtab_visitdate": {"message": "at "},
   "newtab_visitcount": {"message": " visits"},
   "newtab_addbookmark": {"message": "Add bookmark"},
+  "newtab_showmore": {"message": "Click to see more"},
   "google_disable_msg": {"message": "This site has been blocked by you (Web Record Manager)"},
   "setting_title": {"message": "Web Record Manager - Setting"},
   "setting_about": {"message": "About Me"},
