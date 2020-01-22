@@ -14,7 +14,7 @@ chrome.storage.sync.get(null, datas => {
         } else {
             time = ""
         }
-        let imgDom = `<img height="1.7em" class="item-img" src="http://${data.name}/favicon.ico"/>`;
+        let imgDom = `<img class="item-img" src="http://${data.name}/favicon.ico"/>`;
         let textDom = `<div class="item-name text-ellipsis">${time} - ${data.name}</div>`;
         let btnDom = `<button class="item-btn" data-group="${key}">×</button>`;
         let item = createNode(`<div class="item">${imgDom}${textDom}${btnDom}</div>`);

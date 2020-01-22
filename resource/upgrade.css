@@ -22,6 +22,19 @@ html, body {
     overflow: hidden;
 }
 
+.btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+    outline: none;
+    border-radius: 3px;
+    user-select: none;
+}
+
+.btn:hover {
+    font-weight: bolder;
+}
+
 a {
     cursor: pointer;
     text-decoration: none;

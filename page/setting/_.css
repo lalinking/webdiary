@@ -41,16 +41,18 @@
 }
 
 .item-img {
-    width: 1.8em;
-    height: 1.8em;
-    margin: 0 1em 0.1em 0;
-    display: inline-block;
+    display: inline-flex;
+    width: 1.3em;
+    height: 1.3em;
+    padding: 0 0.7em 0 0;
+    margin: 0.4em 0.5em 0 0;
+    vertical-align: top;
 }
 
 .item-name {
     display: inline-block;
     font-size: 1.35em;
-    width: calc(100% - 5em);
+    width: calc(100% - 4.3em);
 }
 
 .item-btn {
