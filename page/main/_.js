@@ -197,7 +197,11 @@ $search.addEventListener("keyup", e => {
         return;
     }
     let searchingKey = $search.value;
-    search(searchingKey);
+    if (e.altKey && $search.value) {
+        chrome.tabs.create({url: "https://www.google.com/search?q=" + $search.value})
+    } else {
+        search(searchingKey);
+    }
 });
 
 const itemClickFun = (e, div) => {

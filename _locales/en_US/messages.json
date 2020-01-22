@@ -12,7 +12,7 @@
   "group_delete": {"message":"Delete site record"},
   "group_nohistory": {"message": "Delete site record & no longer record"},
   "group_black": {"message":"Delete site record & no longer record & disable on google search"},
-  "newtab_search": {"message": "Search from bookmarks and records (press Enter)"},
+  "newtab_search": {"message": "Enter keywords (enter only local, alt + enter jump to Google search)"},
   "newtab_bookmark": {"message": "Bookmark"},
   "newtab_visitdate": {"message": "at "},
   "newtab_visitcount": {"message": " visits"},

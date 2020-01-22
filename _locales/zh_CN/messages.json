@@ -12,7 +12,7 @@
   "group_delete": {"message":"删除站点记录"},
   "group_nohistory": {"message": "删除站点记录 + 不再记录"},
   "group_black": {"message":"删除站点记录 + 不再记录 + 在谷歌禁用"},
-  "newtab_search": {"message": "从书签、记录中搜索 （按回车键）"},
+  "newtab_search": {"message": "输入关键字（enter 仅本地，alt + enter 跳转到谷歌搜索）"},
   "newtab_bookmark": {"message": "书签"},
   "newtab_visitdate": {"message": "于 "},
   "newtab_visitcount": {"message": " 次访问"},

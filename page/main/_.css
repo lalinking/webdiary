@@ -8,8 +8,12 @@
     height: 2em;
 }
 
+.top-div img {
+    height: 1.4rem;
+}
+
 .search-input {
-    margin: 0 12.5rem 0 5rem;
+    margin: 0 15.5em 0 5rem;
     width: 28rem;
     height: 1.5em;
     padding: 0.2em 0.5em;
@@ -18,23 +22,15 @@
     border-radius: 0.25em;
 }
 
-.setting-btn {
-    font-size: 1.6em;
-    vertical-align: bottom;
-    width: 2em;
-    border: none;
-    background: none;
+.top-div .btn {
     cursor: pointer;
-    outline: none;
+    padding: 0;
     border-radius: 3px;
+    margin: 0.15em;
 }
 
-.setting-btn:hover {
+.top-div .btn:hover {
     background-color: #b4b9bf;
-}
-
-.top-div:hover .setting-btn {
-    font-weight: bolder;
 }
 
 .content-div {
