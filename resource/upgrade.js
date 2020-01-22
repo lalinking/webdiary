@@ -1,15 +1,3 @@
-/**
- * 扩展数组，实现插入方法
- */
-Array.prototype.insert = function (index, item) {
-    this.splice(index, 0, item);
-};
-Array.prototype.remove = function (val) {
-    let index = this.indexOf(val);
-    if (index > -1) {
-        this.splice(index - 1, 1);
-    }
-};
 String.prototype.hashCode = function () {
     let hash = 5381;
     for (let i = 0; i < this.length; i++) {
@@ -18,7 +6,7 @@ String.prototype.hashCode = function () {
     return hash;
 };
 Date.prototype.format = function (fmt) { //author: meizz
-    var o = {
+    let o = {
         "M+": this.getMonth() + 1, //月份
         "d+": this.getDate(), //日
         "H+": this.getHours(), //小时
@@ -28,15 +16,9 @@ Date.prototype.format = function (fmt) { //author: meizz
         "S": this.getMilliseconds() //毫秒
     };
     if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-    for (var k in o)
-        if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    for (let k in o)
+        if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
     return fmt;
-};
-/**
- * 获取当前元素计算后的样式
- */
-window.getComputedStyle = window.getComputedStyle || function (dom) {
-    return dom.currentStyle;
 };
 
 window.$ = (selector, dom) => {

@@ -1,7 +1,3 @@
-html {
-    overflow: hidden;
-}
-
 .root-div {
     height: 100%;
 }
@@ -12,32 +8,33 @@ html {
     height: 2em;
 }
 
-.top-btn {
-    position: absolute;
-    left: 1em;
-    font-size: 1.5em !important;
-    top: 0.55em;
-    font-weight: bolder;
-    margin: 0 !important;
-    padding: 0 0 0.1em 0 !important;
-}
-
-.top-div:hover .top-btn {
-    background-color: lavender;
-}
-
-.top-div .search-div {
-    margin: 0 auto;
-    width: 50%;
-}
-
-.top-div .search-input {
-    width: calc(100% - 1em);
+.search-input {
+    margin: 0 12.5rem 0 5rem;
+    width: 28rem;
     height: 1.5em;
     padding: 0.2em 0.5em;
     border: none;
     outline: none;
     border-radius: 0.25em;
+}
+
+.setting-btn {
+    font-size: 1.6em;
+    vertical-align: bottom;
+    width: 2em;
+    border: none;
+    background: none;
+    cursor: pointer;
+    outline: none;
+    border-radius: 3px;
+}
+
+.setting-btn:hover {
+    background-color: #b4b9bf;
+}
+
+.top-div:hover .setting-btn {
+    font-weight: bolder;
 }
 
 .content-div {
@@ -181,7 +178,7 @@ html {
 
 .content-item-date {
     display: inline-block;
-    width: 11em;
+    padding-right: 1em;
     text-align: left;
 }
 

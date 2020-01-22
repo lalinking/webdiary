@@ -2,26 +2,24 @@
   "manifest_version": 2,
   "name": "__MSG_main_name__",
   "description": "__MSG_main_desc__",
-  "version": "1.2",
+  "version": "2.1",
   "icons": {
     "48": "/resource/icon48.png"
   },
+  "author": "Ric",
   "default_locale": "zh_CN",
-  "chrome_url_overrides": {
-    "newtab": "/page/newtab/_.html"
-  },
+  "options_page": "/page/setting/__.html",
   "background": {
     "scripts": [
       "background.js"
     ]
   },
   "browser_action": {
-    "default_title": "__MSG_main_name__ \n __MSG_group_nohistory__ \n __MSG_group_black__",
+    "default_title": "__MSG_main_name__ \n __MSG_group_nohistory__ \n __MSG_group_black__ \n __MSG_main_desc__",
     "default_icon": "/resource/icon48.png",
-    "default_popup": "/page/popup/_.html"
+    "default_popup": "/page/main/_.html"
   },
   "permissions": [
-    "activeTab",
     "bookmarks",
     "history",
     "storage"

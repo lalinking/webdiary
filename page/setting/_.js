@@ -10,11 +10,11 @@ chrome.storage.sync.get(null, datas => {
         let data = datas[key];
         let time;
         if (data.time) {
-            time = i18n("newtab_visitdate") + new Date(data.time).format("yyyy-MM-dd HH:mm:ss")
+            time = i18n("newtab_visitdate") + new Date(data.time).format("yyyy-MM-dd")
         } else {
             time = ""
         }
-        let imgDom = `<img class="item-img" src="http://${data.name}/favicon.ico"/>`;
+        let imgDom = `<img height="1.7em" class="item-img" src="http://${data.name}/favicon.ico"/>`;
         let textDom = `<div class="item-name text-ellipsis">${time} - ${data.name}</div>`;
         let btnDom = `<button class="item-btn" data-group="${key}">×</button>`;
         let item = createNode(`<div class="item">${imgDom}${textDom}${btnDom}</div>`);

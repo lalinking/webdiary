@@ -76,7 +76,7 @@ const search = searchingKey => {
 
 const appendResult = (info) => {
     if (info.lastVisitTime) {
-        info.lastVisitTime = i18n("newtab_visitdate") + new Date(info.lastVisitTime).format("yyyy-MM-dd HH:mm:ss")
+        info.lastVisitTime = i18n("newtab_visitdate") + new Date(info.lastVisitTime).format("yyyy-MM-dd HH:mm")
     } else {
         info.lastVisitTime = "---"
     }
@@ -100,7 +100,7 @@ const appendResult = (info) => {
         let groupBlackBtn = `<div><button class="btn group-black">${i18n("group_black")}</button></div>`;
         let favicon = `<img src="http://${info.group}/favicon.ico"/>`;
         let groupTool = `<div class="tool-group-div">${groupDeleteBtn}${groupNoHistoryBtn}${groupBlackBtn}</div>`;
-        $group = createNode(`<div class="content-group" id="${groupDivID}">${favicon}<span>${info.group}</span><button class="btn group-btn">┇</button>${groupTool}</div>`);
+        $group = createNode(`<div class="content-group" data-groupname="${info.group}" id="${groupDivID}">${favicon}<span>${info.group}</span><button class="btn group-btn">┇</button>${groupTool}</div>`);
         $contentDiv.appendChild($group);
     }
     let countAndDate = `<span class="content-item-visitcount ">${info.visitCount}</span><span class="content-item-date">${info.lastVisitTime}</span>`;
@@ -154,9 +154,10 @@ const removeSiteHistory = (groupName, groupDiv) => {
         groupDiv.remove();
         showInfo(i18n("msg_succeed"))
     };
+    showInfo(i18n("msg_processing"));
     let clearFun = () => {
         chrome.history.search({
-            text: groupName,
+            text: "",
             startTime: 0,
             endTime: Date.now(),
             maxResults: 300
@@ -188,7 +189,6 @@ const removeSiteHistory = (groupName, groupDiv) => {
 
 // 添加一些事件、初始化页面
 bind({
-    ui_title: i18n("newtab_title"),
     ui_search: i18n("newtab_search")
 }, document);
 
@@ -216,7 +216,7 @@ const itemClickFun = (e, div) => {
 };
 
 const groupClickFun = (e, div) => {
-    let groupName = $("span", div)[0].innerText;
+    let groupName = div.getAttribute("data-groupname");
     let _div = div;
     let storeKey = getGroupStoreKey(groupName);
     if (e.target.className === "btn group-btn") {
@@ -276,6 +276,6 @@ search("");
 
 $search.focus();
 
-$(".top-btn")[0].addEventListener("click", e => {
-    window.open("/page/setting/_.html", "webdiary_setting")
+$(".setting-btn")[0].addEventListener("click", () => {
+    location.href = "/page/setting/_.html"
 });

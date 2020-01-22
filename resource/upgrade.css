@@ -10,9 +10,10 @@
 
 html, body {
     background-color: #efefef;
-    margin: 0;
-    height: 100%;
-    width: 100%;
+    margin: auto;
+    height: 36rem;
+    width: 50rem;
+    overflow: hidden;
 }
 
 .text-ellipsis {
