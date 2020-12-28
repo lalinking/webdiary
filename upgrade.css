@@ -10,10 +10,16 @@
 
 html, body {
     background-color: #efefef;
-    margin: auto;
-    height: 36rem;
-    width: 50rem;
     overflow: hidden;
+    box-sizing: border-box;
+    height: 36rem;
+}
+
+body {
+    padding: 1px 0 0 1px;
+    margin: 0;
+    height: 100%;
+    width: 50rem;
 }
 
 .text-ellipsis {
@@ -40,6 +46,7 @@ a {
     text-decoration: none;
     color: #bf4f3c;
     animation: ease-in-out;
+    outline: none;
 }
 
 a:hover {
@@ -49,4 +56,10 @@ a:hover {
 
 .hide {
     display: none !important;
+}
+
+.disable {
+    pointer-events: none;
+    opacity: 0.6;
+    user-select: none;
 }

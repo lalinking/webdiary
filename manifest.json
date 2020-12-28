@@ -2,24 +2,27 @@
   "manifest_version": 2,
   "name": "__MSG_main_name__",
   "description": "__MSG_main_desc__",
-  "version": "2.1",
+  "version": "3.0",
   "icons": {
     "48": "/resource/icon48.png"
   },
   "author": "Ric",
   "default_locale": "zh_CN",
-  "options_page": "/page/setting/__.html",
+  "options_page": "/page/setting/_.html?from=opt",
   "background": {
     "scripts": [
+      "lib/pako.min.js",
+      "upgrade.js",
       "background.js"
     ],
     "persistent": false
   },
   "browser_action": {
-    "default_title": "__MSG_main_name__ \n __MSG_group_nohistory__ \n __MSG_group_black__ \n __MSG_main_desc__",
+    "default_title": "__MSG_main_name__ \n __MSG_main_desc__",
     "default_icon": "/resource/icon48.png",
     "default_popup": "/page/main/_.html"
   },
+  "minimum_chrome_version": "38",
   "permissions": [
     "bookmarks",
     "history",

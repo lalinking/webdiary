@@ -1,0 +1,29 @@
+.wd_row {
+    padding-left: 1em;
+    position: absolute;
+    border-left: 10px solid rgb(212 215 220);
+    border-top: 10px solid rgb(0,0,0,0);
+    border-bottom: 10px solid rgb(0,0,0,0);
+    border-radius: 10px;
+    z-index: 99;
+    overflow: hidden;
+    background-color: snow;
+    z-index: 99;
+}
+
+.wd_row .wd_remark {
+    color: #408640;
+    margin: 10px;
+    width: 26em;
+    white-space: break-spaces;
+}
+
+.wd_row:hover {
+    transition: height 300ms;
+    height: auto;
+    z-index: 100;
+}
+
+.wd_row .wd_time {
+    font-size: smaller;
+}

@@ -1,18 +1,17 @@
 .panel {
-    height: 3em;
+    height: 2rem;
     margin: 0;
-    width: 100%;
     overflow: hidden;
-    border-bottom: inset 0.08em snow;
+    border-bottom: inset 0.1rem snow;
     transition: height 300ms;
 }
 
 .active.panel {
-    height: calc(100% - 6.24em);
+    height: calc(100% - 4.2rem);
 }
 
 .content {
-    padding: 10px 0;
+    padding: 5px 0;
     overflow: auto;
     height: 100%;
 }
@@ -30,13 +29,10 @@
 .item {
     height: 2em;
     line-height: 2em;
-    width: calc(50% - 22px);
-    min-width: 30em;
-    max-width: 80em;
-    display: inline-block;
+    width: calc(100% - 22px);
     background-color: snow;
     border-radius: 3px;
-    margin: 2px 8px;
+    margin: 3px 8px;
     padding-left: 5px;
 }
 
@@ -44,7 +40,6 @@
     display: inline-flex;
     width: 1.3em;
     height: 1.3em;
-    padding: 0 0.7em 0 0;
     margin: 0.4em 0.5em 0 0;
     vertical-align: top;
 }

@@ -21,48 +21,37 @@ Date.prototype.format = function (fmt) { //author: meizz
     return fmt;
 };
 
-window.$ = (selector, dom) => {
+var $ = (selector, dom) => {
     return (dom || document).querySelectorAll(selector)
 };
 
-window.createNode = (html) => {
+var createNode = (html) => {
     let nod = document.createElement("div");
     nod.innerHTML = html;
     return nod.children[0];
 };
 
-/**
- * obj 作为键值对，遍历obj将obj的key作为name查找页面上所有元素，将其值刷新。<br>
- * 传入{mydiv:"dis"}，则页面上所有name为mydiv的元素value 或 innerText设置为 "dis"
- */
-window.bind = (obj, dom) => {
+var bind = (obj, dom) => {
     dom = dom || document;
     let _obj = {...obj};
     let _fs = function (name, value) {
         [].slice.call(dom.querySelectorAll(`[name="${name}"]`)).forEach(e => {
             let bindProty = e.getAttribute("data-bind");
             if (bindProty) {
-                return e.setAttribute(bindProty, value);
-            }
-            if (e.tagName === "INPUT") {
-                e.value = value;
-            } else if (e.tagName === "SELECT") {
-                let ops = $(`option[value=${value}]`);
-                if (ops.length === 0) {
-                    let newOp = new Option(value, value);
-                    e.add(newOp);
-                    newOp.selected = true;
+                if (value == undefined) {
+                    return e.removeAttribute(bindProty);
                 } else {
-                    ops[0].selected = true;
+                    return e.setAttribute(bindProty, value);
                 }
-            } else if (e.tagName === "A") {
+            }
+            if (e.tagName == "INPUT" || e.tagName == "TEXTAREA") {
+                e.value = value;
+            } else if (e.tagName == "A") {
                 e.innerText = value;
                 e.textContent = value;
                 if (!e.href) {
                     e.href = value;
                 }
-            } else if (e.tagName === "META") {
-                e.setAttribute("content", value)
             } else {
                 e.innerText = value;
                 e.textContent = value;
@@ -83,7 +72,7 @@ window.bind = (obj, dom) => {
     }
 };
 
-window.Sync = function(auto) {
+var Async = function(auto) {
     this.maxThread = 1;
     let _stime;
     let _lis = [];
@@ -129,57 +118,15 @@ window.Sync = function(auto) {
     this.next = _next
 };
 
-window.i18n = msg => {
+var i18n = msg => {
     return chrome.i18n.getMessage(msg)
 };
 
-window.getUrlGroupName = url => {
-    return url.replace(/^[^:]+:\/*([^/]+(.[^/])*?)\/.*$/, "$1");
-};
-
-window.getGroupStoreKey = groupName => {
+var getGroupStoreKey = groupName => {
     let hashCode = groupName.hashCode();
     return hashCode > 0 ? ("g" + hashCode) : ("h" + Math.abs(hashCode));
 };
 
-window.setStore = (storeKey, data) => {
-    let _sync = new Sync();
-    return _sync.call(() => {
-        chrome.storage.sync.get("size", res => {
-            if (!res.size || res.size < 500) {
-                _sync.next()
-            } else {
-                _sync.interrupt(i18n("msg_toomuch"))
-            }
-        })
-    }).call(() => {
-        chrome.permissions.contains({
-            origins: ['https://www.google.com/']
-        }, res => {
-            if (res || !data.disable) {
-                _sync.ignoreNext()
-            }
-            _sync.next()
-        });
-    }).call(() => {
-        chrome.permissions.request({
-            origins: ['https://www.google.com/']
-        }, granted => {
-            if (!granted) {
-                _sync.interrupt(i18n("msg_cancel"))
-            } else {
-                _sync.next()
-            }
-        });
-    }).call(() => {
-        let storeValue = {};
-        storeValue[storeKey] = data;
-        chrome.storage.sync.set(storeValue, _sync.next)
-    }).call(() => {
-        if (chrome.runtime.lastError) {
-            _sync.interrupt(i18n("msg_err") + chrome.runtime.lastError.message)
-        } else {
-            _sync.next()
-        }
-    });
+var getUrlGroupName = url => {
+    return url.replace(/^[^:]+:\/*([^/]+(.[^/])*?)\/.*$/, "$1");
 };

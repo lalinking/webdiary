@@ -19,7 +19,7 @@
     padding: 0.2em 0.5em;
     border: none;
     outline: none;
-    border-radius: 0.25em;
+    border-radius: 2px;
 }
 
 .top-div .btn {
@@ -56,6 +56,16 @@
     font-size: 1.6em;
     vertical-align: super;
     font-weight: bold;
+}
+
+.content-group[data-rm=true] {
+    opacity: 0.6;
+}
+
+.content-group [name=remark] {
+    margin: 0 5rem;
+    color: #408640;
+    line-height: 1.5rem;
 }
 
 .content-group img {
@@ -113,14 +123,15 @@
     background-color: #242429;
     color: white;
     line-height: 1.5em;
-    font-size: 1.2em;
     position: absolute;
     border-radius: 5px;
     padding: 0.4em 1em;
-    max-width: calc(100% - 12em);
-    margin: -6em auto;
+    max-width: calc(100% - 2rem);
+    min-width: 80%;
+    margin: -6.3em auto;
     display: none;
-    left: 9em;
+    text-align: center;
+    left: 1rem;
     pointer-events: none;
 }
 
@@ -139,7 +150,7 @@
     border-color: #242429 transparent transparent transparent;
     position: absolute;
     top: 100%;
-    left: 7.4em;
+    left: 15rem;
 }
 
 .content-item:hover {
@@ -163,10 +174,17 @@
     display: block;
 }
 
+.content-group a:focus {
+    padding-left: 1px;
+    border-bottom: 1px #f31313 solid;
+    box-shadow: 0 4px 7px -4px black;
+}
+
 .content-item-date {
+    min-width: 7.4rem;
     display: inline-block;
     padding-right: 1em;
-    text-align: left;
+    text-align: center;
 }
 
 .content-item-visitcount {
@@ -246,4 +264,52 @@
     100% {
         bottom: -3.4em;
     }
+}
+
+#remark_panel {
+    position: absolute;
+    background-color: #ffffff;
+    box-shadow: #eaecef 0 25px 100px 90px;
+    width: 420px;
+    height: 350px;
+    top: calc(50% - 175px);
+    left: calc(50% - 210px);
+    border-radius: 5px;
+}
+
+#remark_panel > div {
+    margin: 5px 10px;
+    line-height: 1.5rem;
+}
+
+#remark_panel [name=name] {
+    font-size: 1.3rem;
+}
+
+#remark_panel label {
+    vertical-align: middle;
+    font-size: 0.8rem;
+}
+
+#remark_panel textarea {
+    resize: none;
+    width: 380px;
+    height: 160px;
+    border: none;
+    box-shadow: inset #5a5c61 0 0 2px 0;
+    border-radius: 3px;
+    padding: 10px;
+    color: #0b4c72;
+    outline: none;
+}
+
+#remark_panel input[type=checkbox] {
+    margin: 0;
+    height: 1.5rem;
+    vertical-align: middle;
+}
+
+.op_panel {
+    text-align: right;
+    margin: 0 3rem !important;
 }
