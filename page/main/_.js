@@ -300,7 +300,7 @@ $("[name='ui_btn_save']")[0].addEventListener("click", () => {
         }
     })
 });
-document.addEventListener("keyup", e => {
+document.addEventListener("keydown", e => {
     if (e.target.tagName == "TEXTAREA") {
         return;
     }
@@ -310,9 +310,7 @@ document.addEventListener("keyup", e => {
     clearTimeout(searchTimeout);
     let aList = [].slice.call($(".content-group div:not(.content-item-more) a"));
     let itemSize = aList.length;
-    if (itemSize === 0) {
-        return
-    }
+    if (itemSize === 0) return;
     let currentA = $("a:focus");
     let currentIndex;
     if (currentA.length === 1) {
@@ -320,9 +318,6 @@ document.addEventListener("keyup", e => {
             let a = aList[index];
             if (a === currentA[0]) {
                 currentIndex = index;
-                if(currentIndex == 8) {
-                    debugger;
-                }
                 break
             }
         }
