@@ -1,5 +1,5 @@
 $("#search div.g").forEach(g => {
-    let url = $("a[jsname=ajHxCd]" ,g)[0].getAttribute("href");
+    let url = $("cite" ,g)[0].firstChild.textContent;
     let key = getGroupStoreKey(getUrlGroupName(url));
     chrome.storage.local.get(key, res => {
         let data = res[key];
