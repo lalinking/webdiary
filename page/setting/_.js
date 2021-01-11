@@ -40,7 +40,7 @@ chrome.storage.local.get(null, datas => {
         $ListPanel.appendChild(item)
     }
     if (!$ListPanel.children.length) {
-        $nohistoryC.appendChild(createNode(`<div class="textcontent">${i18n("msg_nores")}</div>`))
+        $ListPanel.appendChild(createNode(`<div class="textcontent">${i18n("msg_nores")}</div>`))
     }
 });
 
