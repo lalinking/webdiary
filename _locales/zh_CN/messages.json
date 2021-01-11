@@ -19,7 +19,7 @@
   "ui_search_placehold": {"message": "输入关键字（enter 仅本地，alt + enter 跳转到谷歌搜索）"},
   "ui_visitcount": {"message": " 次访问"},
   "ui_showmore": {"message": "点击查看更多"},
-  "ui_setting_title": {"message": "设置"},
+  "ui_setting_title": {"message": "授权设置"},
   "ui_setting_about": {"message": "关于本插件"},
   "ui_setting_about_content": {"message": "开源、免费、好用的 Chrome 插件。\n\t源代码： https://github.com/ric2cn/webdiary"}
 }

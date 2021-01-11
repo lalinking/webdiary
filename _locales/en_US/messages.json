@@ -20,7 +20,7 @@
   "ui_search_placehold": {"message": "Enter keywords (enter only local, alt + enter jump to Google search)"},
   "ui_visitcount": {"message": " visits"},
   "ui_showmore": {"message": "Click to see more"},
-  "ui_setting_title": {"message": "Setting"},
+  "ui_setting_title": {"message": "Authorization Settings"},
   "ui_setting_about": {"message": "About Me"},
   "ui_setting_about_content": {"message": "Source code: https://github.com/ric2cn/webdiary"}
 }
