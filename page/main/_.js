@@ -304,7 +304,7 @@ document.addEventListener("keydown", e => {
     if (e.target.tagName == "TEXTAREA") {
         return;
     }
-    if (e.keyCode !== 38 && e.keyCode !== 40) {
+    if (e.keyCode !== 38 && e.keyCode !== 40 && e.keyCode !== 13) {
         return $search.focus();
     }
     clearTimeout(searchTimeout);
