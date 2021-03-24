@@ -308,13 +308,12 @@ document.addEventListener("keydown", e => {
         return $search.focus();
     }
     clearTimeout(searchTimeout);
-    let aList = [].slice.call($(".content-group div:not(.content-item-more) a"));
-    let itemSize = aList.length;
-    if (itemSize === 0) return;
+    let aList = [].slice.call($(".content-group:not(.large-group) div:not(.showmore) a, .content-group.large-group div:not(.content-item-more) a"));
+    if (aList.length === 0) return;
     let currentA = $("a:focus");
     let currentIndex;
     if (currentA.length === 1) {
-        for (let index = 0; index < itemSize; index++) {
+        for (let index = 0; index < aList.length; index++) {
             let a = aList[index];
             if (a === currentA[0]) {
                 currentIndex = index;
@@ -322,14 +321,19 @@ document.addEventListener("keydown", e => {
             }
         }
     } else {
-        return aList[0].focus()
+        currentIndex = -1
     }
-    if (e.keyCode === 38) { // 上
-        currentIndex = currentIndex < 1 ? itemSize - 1 : currentIndex - 1
+    if (e.keyCode === 38 || e.keyCode == 13) { // 上
+        currentIndex = currentIndex < 1 ? aList.length - 1 : currentIndex - 1
     } else if (e.keyCode === 40) { // 下
-        currentIndex = currentIndex > itemSize - 2 ? 0 : currentIndex + 1
+        currentIndex = currentIndex > aList.length - 2 ? 0 : currentIndex + 1
     }
-    aList[currentIndex].focus()
+    if (e.keyCode == 13) {
+        setTimeout(() => {aList[currentIndex].focus()}, 4)
+    } else {
+        event.preventDefault();
+        aList[currentIndex].focus()
+    }
 });
 
 search();
