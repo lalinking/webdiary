@@ -301,7 +301,7 @@ $("[name='ui_btn_save']")[0].addEventListener("click", () => {
     })
 });
 document.addEventListener("keydown", e => {
-    if (e.target.tagName == "TEXTAREA") {
+    if (e.target.tagName == "TEXTAREA" || (e.target.tagName == "INPUT" && e.keyCode == 13)) {
         return;
     }
     if (e.keyCode !== 38 && e.keyCode !== 40 && e.keyCode !== 13) {
