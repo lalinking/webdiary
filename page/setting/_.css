@@ -19,10 +19,10 @@
 
 .panel-title {
     background-color: #3d69c1;
-    height: 3em;
+    height: 2rem;
     color: whitesmoke;
     cursor: pointer;
-    line-height: 3em;
+    line-height: 2rem;
     text-align: center;
     user-select: none;
 }

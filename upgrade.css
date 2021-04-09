@@ -4,7 +4,7 @@
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: #855f7e;
+    background-color: #afb4bf;
     border-radius: 3px;
 }
 
@@ -16,7 +16,7 @@ html, body {
 }
 
 body {
-    padding: 1px 0 0 1px;
+    padding: 1px 0;
     margin: 0;
     height: 100%;
     width: 50rem;
