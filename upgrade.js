@@ -128,5 +128,5 @@ var getGroupStoreKey = groupName => {
 };
 
 var getUrlGroupName = url => {
-    return url.replace(/^[^:]+:\/*([^/]+(.[^/])*?)\/.*$/, "$1");
+    return url.replace(/^[^:]+\:\/\/([^/]+).*$/, "$1");
 };
