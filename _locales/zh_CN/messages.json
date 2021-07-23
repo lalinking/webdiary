@@ -1,5 +1,5 @@
 {
-  "main_name": {"message": "WEB 足迹管家"},
+  "main_name": {"message": "书签 & 历史记录 管理器"},
   "main_desc": {"message": "开源的小插件。\n可以快速搜索书签、历史记录。\n可以方便的管理浏览记录、在搜索页面屏蔽一些无用的记录。"},
   "msg_more": {"message": "更多记录未显示，请缩小搜索范围"},
   "msg_nores": {"message": "未找到任何记录"},
