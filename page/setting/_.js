@@ -33,7 +33,7 @@ chrome.storage.local.get(null, datas => {
         } else {
             time = ""
         }
-        let imgDom = `<img class="item-img" src="http://${data.name}/favicon.ico"/>`;
+        let imgDom = `<img class="item-img" src="chrome://favicon/size/48/http://${data.name}/"/>`;
         let textDom = `<div class="item-name text-ellipsis">${time}&nbsp;&nbsp;&nbsp;${data.name}</div>`;
         let btnDom = `<button name="btn_remove" class="item-btn btn" data-key="${key}">×</button>`;
         let item = createNode(`<div class="item" title="${data.remark}">${imgDom}${textDom}${btnDom}</div>`);
