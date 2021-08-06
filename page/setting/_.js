@@ -12,7 +12,7 @@ chrome.storage.local.get("urls", res => {
         chrome.permissions.contains({
             origins: [_url]
         }, active => {
-            let imgDom = `<img class="item-img" src="${_url}/favicon.ico"/>`;
+            let imgDom = `<img class="item-img favicon" src="${_url}/favicon.ico"/>`;
             let textDom = `<div class="item-name text-ellipsis">${_url}</div>`;
             let btnDom = `<input name="btn_active" data-url="${_url}" class="item-btn btn" type="checkbox" ${active ? "checked" : "data-inactive"}/>`;
             let item = createNode(`<div class="item">${imgDom}${textDom}${btnDom}</div>`);
@@ -33,7 +33,7 @@ chrome.storage.local.get(null, datas => {
         } else {
             time = ""
         }
-        let imgDom = `<img class="item-img" src="chrome://favicon/size/48/http://${data.name}/"/>`;
+        let imgDom = `<img class="item-img favicon" src="http://${data.name}/favicon.ico"/>`;
         let textDom = `<div class="item-name text-ellipsis">${time}&nbsp;&nbsp;&nbsp;${data.name}</div>`;
         let btnDom = `<button name="btn_remove" class="item-btn btn" data-key="${key}">×</button>`;
         let item = createNode(`<div class="item" title="${data.remark}">${imgDom}${textDom}${btnDom}</div>`);

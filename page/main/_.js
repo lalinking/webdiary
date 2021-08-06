@@ -34,11 +34,13 @@ const appendResult = (info) => {
     if ($group.length > 0) {
         $group = $group[0];
     } else {
-        let groupDeleteBtn = `<div><button class="btn" name="btn_sites_delete">${i18n("btn_sites_delete")}</button></div>`;
-        let groupRemarkBtn = `<div><button class="btn" name="group_remark">${i18n("btn_sites_remark")}</button></div>`;
-        let favicon = `<img src="http://${info.group}/favicon.ico"/>`;
-        let groupTool = `<div class="tool-group-div">${groupDeleteBtn}${groupRemarkBtn}</div>`;
-        $group = createNode(`<div class="content-group" name="group" data-groupname="${info.group}" id="${groupDivID}">${favicon}<span>${info.group}</span><button class="btn" name="group_btn">┇</button>${groupTool}<div class="text-ellipsis" name='remark'></div></div>`);
+        let groupIncognitoBtn = `<img class="btn" name="btn_sites_incognito"  src="/resource/incognito.png" title="${i18n("ui_sites_incognito")}" />`;
+        let groupIncognitoNoBtn = `<img class="btn" name="btn_sites_incognito_no"  src="/resource/incognito-no.png" title="${i18n("ui_sites_incognito")}" />`;
+        let groupDeleteBtn = `<img class="btn" name="btn_sites_delete"  src="/resource/delete.png" title="${i18n("btn_sites_delete")}" />`;
+        let groupRemarkBtn = `<img class="btn" name="group_remark" src="/resource/remark.png" title="${i18n("btn_sites_remark")}" />`;
+        let favicon = `<img class="favicon" src="chrome://favicon/http://${info.group}"/>`;
+        let groupTool = `<div class="tool-group-div">${groupIncognitoBtn}${groupIncognitoNoBtn}${groupDeleteBtn}${groupRemarkBtn}</div>`;
+        $group = createNode(`<div class="content-group" name="group" data-groupname="${info.group}" id="${groupDivID}">${favicon}<span class="text-ellipsis">${info.group}</span>${groupTool}<div class="text-ellipsis" name='remark'></div></div>`);
         $contentDiv.appendChild($group);
         let key = getGroupStoreKey(info.group);
         chrome.storage.local.get(key, res => {
@@ -145,6 +147,24 @@ const removeMarkbook = (info, target) => {
         target.innerText = "☆"
     })
 };
+const setSiteIncognito = (groupName, groupDiv, ifrm) => {
+    let key = getGroupStoreKey(groupName);
+    chrome.storage.local.get(key, res => {
+        let _obj = res[key] || {name: groupName, remark: ""};
+        _obj.key = key;
+        _obj.rm = ifrm ? true : undefined;
+        _obj.time = new Date().format("yyyy-MM-dd HH:mm:ss");
+        let _store = {};
+        _store[key] = _obj;
+        chrome.storage.local.set(_store, () => {
+            if (chrome.runtime.lastError) {
+                alert(i18n("msg_err") + chrome.runtime.lastError.message)
+            } else {
+                groupDiv.setAttribute("data-rm", ifrm ? "true" : "false");
+            }
+        })
+    })
+};
 const removeHistory = (info, itemDiv) => {
     chrome.history.deleteUrl({url: info.url}, () => {
         itemDiv.remove()
@@ -187,7 +207,7 @@ const removeSiteHistory = (groupName, groupDiv) => {
     };
     async.call(clearFun);
 };
-const makeRemark = groupName => {
+const showSiteSetting = groupName => {
     $rootDiv.className = "root-div disable";
     let panel = $("#remark_panel")[0];
     panel.className = "";
@@ -243,7 +263,11 @@ const groupClickFun = (e, div) => {
     if (name == "btn_sites_delete") {
         removeSiteHistory(groupName, div)
     } else if (name === "group_remark") {
-        makeRemark(groupName);
+        showSiteSetting(groupName);
+    } else if (name === "btn_sites_incognito") {
+        setSiteIncognito(groupName, div, false);
+    } else if (name === "btn_sites_incognito_no") {
+        setSiteIncognito(groupName, div, true);
     }
 };
 $contentDiv.addEventListener("click", e => {
