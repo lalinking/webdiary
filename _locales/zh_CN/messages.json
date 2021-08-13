@@ -21,7 +21,7 @@
   "ui_setting_authorization": {"message": "授权管理"},
   "ui_setting_authorization_tips": {"message": "* 勾选授权后将处理搜索页的展示结果，展示网站备注、隐藏相关网站。\n* 如果搜索域名不能对应，请修改为正确的域名。例如我的谷歌搜索搜索页网址是 https://www.google.com.hk/search?q=shpass，则需要改成 https://www.google.com.hk/\n* 目前仅支持谷歌和必应。"},
   "ui_setting_sites": {"message": "我的网站"},
-  "ui_setting_sites_tips": {"message": "* 在此处集中管理您备注过的网站。\n* 显示您首次记录改网站的日期。\n* 此处的删除功能并不是删除浏览器历史记录，而是删除该记录项。"},
+  "ui_setting_sites_tips": {"message": "* 在此处集中管理您备注过的网站。\n* 显示您首次记录该网站的日期。\n* 此处的删除功能并不是删除浏览器历史记录，而是删除该记录项。"},
   "ui_setting_about": {"message": "关于本插件"},
   "ui_setting_about_content": {"message": "开源、免费、好用的 Chrome 插件。\n\t源代码： https://github.com/ric2cn/webdiary"}
 }
