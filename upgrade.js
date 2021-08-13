@@ -1,3 +1,4 @@
+const upgrade = true;
 String.prototype.hashCode = function () {
     let hash = 5381;
     for (let i = 0; i < this.length; i++) {

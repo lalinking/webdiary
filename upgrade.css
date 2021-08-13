@@ -39,6 +39,7 @@ body {
 
 .btn:hover {
     font-weight: bolder;
+    background-color: #66666d !important;
 }
 
 a {

@@ -8,7 +8,7 @@ const showInfo = msg => {
     setTimeout(() => {
         $msgDiv.innerText = msg;
         $msgDiv.className = "msg-div msg-flash";
-    }, 0);
+    }, 100);
 };
 
 const appendResult = (info) => {
@@ -34,13 +34,15 @@ const appendResult = (info) => {
     if ($group.length > 0) {
         $group = $group[0];
     } else {
-        let groupIncognitoBtn = `<img class="btn" name="btn_sites_incognito"  src="/resource/incognito.png" title="${i18n("ui_sites_incognito")}" />`;
-        let groupIncognitoNoBtn = `<img class="btn" name="btn_sites_incognito_no"  src="/resource/incognito-no.png" title="${i18n("ui_sites_incognito")}" />`;
-        let groupDeleteBtn = `<img class="btn" name="btn_sites_delete"  src="/resource/delete.png" title="${i18n("btn_sites_delete")}" />`;
-        let groupRemarkBtn = `<img class="btn" name="group_remark" src="/resource/remark.png" title="${i18n("btn_sites_remark")}" />`;
+        let groupHideBtn = `<img class="btn page_upgrade" name="btn_sites_ac_hide" src="/resource/hide.png" title="${i18n("msg_sites_hide")}" />`;
+        let groupHideNoBtn = `<img class="btn page_upgrade" name="btn_sites_hide" src="/resource/hide-no.png" title="${i18n("msg_sites_hide")}" />`;
+        let groupIncognitoBtn = `<img class="btn" name="btn_sites_ac_incognito" src="/resource/incognito.png" title="${i18n("msg_sites_incognito")}" />`;
+        let groupIncognitoNoBtn = `<img class="btn" name="btn_sites_incognito" src="/resource/incognito-no.png" title="${i18n("msg_sites_incognito")}" />`;
+        let groupDeleteBtn = `<img class="btn" name="btn_sites_delete" src="/resource/delete.png" title="${i18n("msg_sites_delete")}" />`;
+        let groupRemarkBtn = `<img class="btn" name="btn_sites_remark" src="/resource/remark.png" title="${i18n("msg_sites_remark")}" />`;
         let favicon = `<img class="favicon" src="chrome://favicon/http://${info.group}"/>`;
-        let groupTool = `<div class="tool-group-div">${groupIncognitoBtn}${groupIncognitoNoBtn}${groupDeleteBtn}${groupRemarkBtn}</div>`;
-        $group = createNode(`<div class="content-group" name="group" data-groupname="${info.group}" id="${groupDivID}">${favicon}<span class="text-ellipsis">${info.group}</span>${groupTool}<div class="text-ellipsis" name='remark'></div></div>`);
+        let groupTool = `<div class="tool-group-div">${groupHideBtn}${groupHideNoBtn}${groupIncognitoBtn}${groupIncognitoNoBtn}${groupDeleteBtn}${groupRemarkBtn}</div>`;
+        $group = createNode(`<div class="content-group" name="group" data-groupname="${info.group}" id="${groupDivID}">${favicon}<span class="text-ellipsis">${info.group}</span>${groupTool}<div name='remark'></div></div>`);
         $contentDiv.appendChild($group);
         let key = getGroupStoreKey(info.group);
         chrome.storage.local.get(key, res => {
@@ -48,7 +50,11 @@ const appendResult = (info) => {
             if (!g) return;
             if (g.rm) {
                 $group.setAttribute("data-rm", "true");
-                $group.setAttribute("title", i18n("ui_sites_incognito"));
+                $group.setAttribute("title", i18n("msg_sites_incognito"));
+            }
+            if (g.hd) {
+                $group.setAttribute("data-hd", "true");
+                $group.setAttribute("title", i18n("msg_sites_incognito"));
             }
             if (g.remark) $("[name=remark]", $group)[0].innerHTML = g.remark;
         })
@@ -153,7 +159,7 @@ const setSiteIncognito = (groupName, groupDiv, ifrm) => {
         let _obj = res[key] || {name: groupName, remark: ""};
         _obj.key = key;
         _obj.rm = ifrm ? true : undefined;
-        _obj.time = new Date().format("yyyy-MM-dd HH:mm:ss");
+        _obj.time = _obj.time || new Date().format("yyyy-MM-dd HH:mm:ss");
         let _store = {};
         _store[key] = _obj;
         chrome.storage.local.set(_store, () => {
@@ -161,6 +167,24 @@ const setSiteIncognito = (groupName, groupDiv, ifrm) => {
                 alert(i18n("msg_err") + chrome.runtime.lastError.message)
             } else {
                 groupDiv.setAttribute("data-rm", ifrm ? "true" : "false");
+            }
+        })
+    })
+};
+const setSiteHide = (groupName, groupDiv, ifhd) => {
+    let key = getGroupStoreKey(groupName);
+    chrome.storage.local.get(key, res => {
+        let _obj = res[key] || {name: groupName, remark: ""};
+        _obj.key = key;
+        _obj.hd = ifhd ? true : undefined;
+        _obj.time = _obj.time || new Date().format("yyyy-MM-dd HH:mm:ss");
+        let _store = {};
+        _store[key] = _obj;
+        chrome.storage.local.set(_store, () => {
+            if (chrome.runtime.lastError) {
+                alert(i18n("msg_err") + chrome.runtime.lastError.message)
+            } else {
+                groupDiv.setAttribute("data-hd", ifhd ? "true" : "false");
             }
         })
     })
@@ -207,30 +231,55 @@ const removeSiteHistory = (groupName, groupDiv) => {
     };
     async.call(clearFun);
 };
-const showSiteSetting = groupName => {
-    $rootDiv.className = "root-div disable";
-    let panel = $("#remark_panel")[0];
-    panel.className = "";
-    let key = getGroupStoreKey(groupName);
-    chrome.storage.local.get(key, res => {
-        let _obj = res[key] || {name: groupName, remark: ""};
-        _obj.key = key;
-        _obj.rm = _obj.rm ? true : undefined;
-        _obj.time = _obj.time ? new Date(_obj.time).format("yyyy-MM-dd HH:mm:ss") : "-"
-        bind(_obj, panel)
-    })
+const setSiteRemark = (groupName, groupDiv) => {
+	if ($(".remark_editor", groupDiv).length > 0) {return;}
+    let _remark = "";
+    let _remarkDiv = $("[name='remark']", groupDiv)[0];
+	_remark = _remarkDiv.innerText;
+	_remarkDiv.className = "hide";
+	let _remarkArea = document.createElement("textarea");
+	_remarkArea.className = "remark_editor";
+	_remarkArea.value = _remark;
+	groupDiv.insertBefore(_remarkArea, groupDiv.children[2]);
+	_remarkArea.style.height = _remarkArea.scrollHeight + "px";
+	_remarkArea.addEventListener("input", e => {
+		_remarkArea.style.height = 'auto';
+		_remarkArea.style.height = _remarkArea.scrollHeight + "px";
+	});
+	_remarkArea.addEventListener("blur", e => {
+		let key = getGroupStoreKey(groupName);
+		chrome.storage.local.get(key, res => {
+			let _obj = res[key] || {name: groupName, remark: ""};
+			_obj.key = key;
+			_obj.remark = _remarkArea.value ? _remarkArea.value : undefined;
+			_obj.time = _obj.time || new Date().format("yyyy-MM-dd HH:mm:ss");
+			let _store = {};
+			_store[key] = _obj;
+			chrome.storage.local.set(_store, () => {
+				if (chrome.runtime.lastError) {
+					alert(i18n("msg_err") + chrome.runtime.lastError.message)
+				} else {
+					_remarkDiv.innerHTML = _remarkArea.value;
+					_remarkDiv.className = "";
+					_remarkArea.remove();
+					showInfo(i18n("msg_succeed"));
+				}
+			})
+		});
+	});
+	_remarkArea.focus();
 };
 // 添加一些事件、初始化页面
 bind({
     ui_search: i18n("ui_search_placehold"),
-    ui_sites_incognito_mode: i18n("ui_sites_incognito"),
-    ui_sites_remark: i18n("ui_sites_remark"),
-    ui_sites_optime: i18n("ui_sites_optime"),
-    ui_btn_cancel: i18n("btn_cancel"),
-    ui_btn_save: i18n("btn_save"),
-    ui_btn_remove: i18n("btn_remove")
+    ui_sites_incognito_mode: i18n("ui_sites_incognito")
 }, document);
-
+chrome.storage.local.get("setting_searchpage_upgrade", res => {
+	let upgrade = res["setting_searchpage_upgrade"];
+	if (upgrade) {
+		document.body.className = "searchpage_upgrade"
+	}
+});
 let searchTimeout;
 $search.addEventListener("keyup", e => {
     if (e.keyCode < 65 && e.keyCode != 13 && e.keyCode != 8 && e.keyCode != 46) return;
@@ -262,12 +311,16 @@ const groupClickFun = (e, div) => {
     let name = e.target.getAttribute("name");
     if (name == "btn_sites_delete") {
         removeSiteHistory(groupName, div)
-    } else if (name === "group_remark") {
-        showSiteSetting(groupName);
-    } else if (name === "btn_sites_incognito") {
+    } else if (name === "btn_sites_remark") {
+        setSiteRemark(groupName, div);
+    } else if (name === "btn_sites_ac_incognito") {
         setSiteIncognito(groupName, div, false);
-    } else if (name === "btn_sites_incognito_no") {
+    } else if (name === "btn_sites_incognito") {
         setSiteIncognito(groupName, div, true);
+    } else if (name === "btn_sites_ac_hide") {
+        setSiteHide(groupName, div, false);
+    } else if (name === "btn_sites_hide") {
+        setSiteHide(groupName, div, true);
     }
 };
 $contentDiv.addEventListener("click", e => {
@@ -291,38 +344,6 @@ $contentDiv.addEventListener("click", e => {
 });
 $(".setting-btn")[0].addEventListener("click", () => {
     location.href = "/page/setting/_.html"
-});
-$("[name='ui_btn_remove']")[0].addEventListener("click", () => {
-    chrome.storage.local.remove($("#remark_panel [name=key]")[0].value, () => {
-        if (chrome.runtime.lastError) {
-            alert(i18n("msg_err") + chrome.runtime.lastError.message)
-        } else {
-            $('#remark_panel')[0].className = 'hide';
-            $rootDiv.className = "root-div";
-        }
-    })
-});
-$("[name='ui_btn_cancel']")[0].addEventListener("click", () => {
-    $('#remark_panel')[0].className = 'hide';
-    $rootDiv.className = "root-div";
-});
-$("[name='ui_btn_save']")[0].addEventListener("click", () => {
-    let _data = {
-        name: $("#remark_panel [name=name]")[0].innerText,
-        rm: $("#remark_panel [name=rm]")[0].checked,
-        remark: $("#remark_panel [name=remark]")[0].value,
-        time: Date.now()
-    };
-    let _store = {};
-    _store[$("#remark_panel [name=key]")[0].value] = _data;
-    chrome.storage.local.set(_store, () => {
-        if (chrome.runtime.lastError) {
-            alert(i18n("msg_err") + chrome.runtime.lastError.message)
-        } else {
-            $('#remark_panel')[0].className = 'hide';
-            $rootDiv.className = "root-div";
-        }
-    })
 });
 document.addEventListener("keydown", e => {
     if (e.target.tagName == "TEXTAREA" || (e.target.tagName == "INPUT" && e.keyCode == 13)) {

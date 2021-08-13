@@ -32,5 +32,13 @@
   "optional_permissions": [
     "http://*/*",
     "https://*/*"
+  ],
+  "web_accessible_resources": [
+    "/resource/hide.png",
+    "/resource/hide-no.png",
+    "/resource/incognito.png",
+    "/resource/incognito-no.png",
+    "/resource/remark.png",
+    "/resource/delete-x.png"
   ]
 }
