@@ -1,66 +1,66 @@
 ::-webkit-scrollbar {
-    width: 10px;
-    background-color: #efefef;
+  width: 10px;
+  background-color: #efefef;
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: #afb4bf;
-    border-radius: 3px;
+  background-color: #afb4bf;
+  border-radius: 3px;
 }
 
 html, body {
-    background-color: #efefef;
-    overflow: hidden;
-    box-sizing: border-box;
-    height: 36rem;
+  background-color: #efefef;
+  overflow: hidden;
+  box-sizing: border-box;
+  height: 36rem;
 }
 
 body {
-    padding: 1px 0;
-    margin: 0;
-    height: 100%;
-    width: 50rem;
+  padding: 1px 0;
+  margin: 0;
+  height: 100%;
+  width: 50rem;
 }
 
 .text-ellipsis {
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .btn {
-    border: none;
-    background: none;
-    cursor: pointer;
-    outline: none;
-    border-radius: 3px;
-    user-select: none;
+  border: none;
+  background: none;
+  cursor: pointer;
+  outline: none;
+  border-radius: 3px;
+  user-select: none;
 }
 
 .btn:hover {
-    font-weight: bolder;
-    background-color: #66666d !important;
+  font-weight: bolder;
+  background-color: #66666d !important;
 }
 
 a {
-    cursor: pointer;
-    text-decoration: none;
-    color: #bf4f3c;
-    animation: ease-in-out;
-    outline: none;
+  cursor: pointer;
+  text-decoration: none;
+  color: #bf4f3c;
+  animation: ease-in-out;
+  outline: none;
 }
 
 a:hover {
-    box-shadow: 0 2px 0 0 #6065a0 !important;
-    border-radius: 0 !important;
+  box-shadow: 0 2px 0 0 #6065a0 !important;
+  border-radius: 0 !important;
 }
 
 .hide {
-    display: none !important;
+  display: none !important;
 }
 
 .disable {
-    pointer-events: none;
-    opacity: 0.6;
-    user-select: none;
+  pointer-events: none;
+  opacity: 0.6;
+  user-select: none;
 }
