@@ -1,6 +1,3 @@
-body:not(.searchpage_upgrade) .page_upgrade {
-  display: none !important;
-}
 .root-div {
   height: 100%;
 }
@@ -64,12 +61,6 @@ body:not(.searchpage_upgrade) .page_upgrade {
 .content-group [name^=btn_sites_ac_] {
   display: none;
 }
-.content-group[data-rm=true] [name=btn_sites_ac_incognito] {
-  display: inline-block;
-}
-.content-group[data-rm=true] [name=btn_sites_incognito] {
-  display: none;
-}
 .content-group[data-hd=true] [name=btn_sites_ac_hide] {
   display: inline-block;
 }
@@ -84,10 +75,6 @@ body:not(.searchpage_upgrade) .page_upgrade {
   font-weight: bold;
 }
 
-.content-group [data-rm=true] {
-  background-color: #f1fcf9f0;
-}
-
 .content-group [name=remark] {
   color: #408640;
   margin: 0.3rem 3.5rem;
@@ -95,21 +82,6 @@ body:not(.searchpage_upgrade) .page_upgrade {
   width: calc(100% - 7.5rem);
   line-height: 1rem;
   white-space: pre-wrap;
-}
-.content-group .remark_editor {
-  margin: 0.3rem 3.5rem;
-  padding: 0.3rem 0.5rem;
-  width: calc(100% - 7.5rem);
-  color: #408640;
-  line-height: 1rem;
-  border: 0;
-  white-space: pre-wrap;
-  border-radius: 5px;
-  outline: none;
-  resize: none;
-  overflow: hidden;
-  background-color: #5f5a5a21;
-  transition: height 100ms linear;
 }
 
 .content-group img {
@@ -124,10 +96,6 @@ body:not(.searchpage_upgrade) .page_upgrade {
   margin-top: 0.6em;
   min-width: 2em;
   font-size: 0.8em;
-}
-
-.content-group:hover .group-btn {
-  background-color: lavender;
 }
 
 .showmore {
@@ -235,7 +203,7 @@ body:not(.searchpage_upgrade) .page_upgrade {
   text-align: right;
 }
 
-.bookmark, .bookmark-add {
+.bookmark-add {
   color: #0718e8;
   font-size: 1.1em;
   position: absolute;
@@ -265,14 +233,24 @@ body:not(.searchpage_upgrade) .page_upgrade {
 
 .tool-group-div .btn {
   color: whitesmoke;
-  height: 1rem;
+  height: 0.9rem;
+  min-width: 0.9rem;
 }
 
-.tool-group-div .btn:hover {}
-
-.tool-group-div > div {
-  height: 2em;
-  margin: 0 auto;
+.content-group .remark_editor {
+  margin: 0.3rem 3.5rem;
+  padding: 0.3rem 0.5rem;
+  width: calc(100% - 7.5rem);
+  color: #408640;
+  line-height: 1rem;
+  border: 0;
+  white-space: pre-wrap;
+  border-radius: 5px;
+  outline: none;
+  resize: none;
+  overflow: hidden;
+  background-color: #5f5a5a21;
+  transition: height 100ms linear;
 }
 
 .msg-div {

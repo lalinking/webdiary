@@ -1,29 +1,39 @@
 /* 搜索结果上的样式 */
 .wd_search_res {}
+.wd_search_res:hover {
+  box-shadow: 0 0 10px 0px #8080804d;
+  border-radius: 5px;
+  padding-left: 3px;
+  padding-right: 3px;
+}
 .wd_search_res_rmk {}
 .wd_search_res_rm {}
 .wd_search_res_hd {}
 .wd_search_res_upgrade {
+  position: absolute;
 }
 /* 增强元素上的样式：工具栏 */
 .wd_search_res_upgrade_tool {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  width: 100%;
   display: none;
   position: absolute;
   box-sizing: border-box;
-  z-index: 2;
+  z-index: 100;
   text-align: right;
-  width: 100%;
   background: none;
 }
 .wd_search_res_rmk .wd_search_res_upgrade_tool {
-  width: 415px;
+  width: 336px;
   margin: 3px 0 0 100%;
 }
 .wd_search_res_upgrade_tool img {
   height: 14px;
   width: 14px;
   cursor: pointer;
-  margin-left: 8px;
+  margin-left: 4px;
   border-radius: 4px;
   user-select: none;
 }
@@ -58,24 +68,36 @@
 .wd_search_res_upgrade_tips {
   margin-left: 100%;
   position: absolute;
-  width: 420px;
+  width: 320px;
   display: none;
   box-sizing: border-box;
   border-radius: 5px;
   padding: 0;
-  border: 1px solid #e2e3e7;
   background-color: white;
   overflow: unset;
+  background-color: white;
+  box-shadow: 0 0 1px 1px #adb3b8fa;
+  transition: margin 100ms linear;
+}
+.wd_search_res_upgrade_tool:hover ~ .wd_search_res_upgrade_tips {
+  z-index: 99;
+}
+.wd_search_res:hover .wd_search_res_upgrade_tips {
+  z-index: 99;
 }
 .wd_search_res_rmk .wd_search_res_upgrade_tips {
   display: block;
 }
 .wd_search_res_upgrade_title {
-  background-color: #e2e3e7;
-  color: white;
+  background-image:url('chrome-extension://__MSG_@@extension_id__/resource/icon48.png');
+  background-repeat: no-repeat;
+  background-size: 20px;
+  background-position: 3px;
+  padding: 5px 0 5px 26px;
+  background-color: #cacfd4;
+  color: #08a2a2;
   margin: 0;
   font-size: 13px;
-  padding: 5px;
   vertical-align: bottom;
   line-height: 16px;
   height: 16px;
@@ -89,6 +111,11 @@
   height: calc(100% - 26px);
   padding: 0.3em 0.5em;
   font-size: 13px;
+}
+.wd_search_res:hover .wd_search_res_upgrade_tips {
+  margin-left: calc(100% + 20px);
+  height: auto !important;
+  z-index: 99;
 }
 /* 填写备注的输入框 */
 .wd_search_res_upgrade_remarkeditor {
@@ -118,9 +145,24 @@
   width: 0px;
   height: 0px;
   border-top: 15px solid transparent;
-  border-bottom: 2px solid transparent;
-  border-right: 15px solid #e2e3e7;
+  border-bottom: 3px solid transparent;
+  border-right: 15px solid #cacfd4;
   position: absolute;
-  top: 9px;
+  top: 8px;
   left: -15px;
+}
+/* 隐藏结果的弱化显示 */
+.wd_search_res_hd {
+  height: 3rem !important;
+  overflow-y: hidden !important;
+}
+.wd_search_res_hd > :not([class~=wd_search_res_upgrade]) {
+  opacity: 0.5 !important;
+}
+
+.b_adSlug {
+  color: red !important;
+  border: 1px solid red !important;
+  font-size: larger !important;
+  font-weight: bolder !important;
 }

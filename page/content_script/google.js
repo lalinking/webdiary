@@ -1,7 +1,14 @@
 const google = true;
-$("#search div.g").forEach(g => {
+const setResClass = (resDiv, data) => {
+  let cls = resDiv.className || "";
+  if (data.rm && cls.indexOf(" wd_search_res_rm ") < 0) {cls += " wd_search_res_rm "} else if (!data.rm) {cls = cls.replace(" wd_search_res_rm ", " ")}
+  if (data.hd && cls.indexOf(" wd_search_res_hd ") < 0) {cls += " wd_search_res_hd "} else if (!data.hd) {cls = cls.replace(" wd_search_res_hd ", " ")}
+  if (data.remark && cls.indexOf(" wd_search_res_rmk ") < 0) {cls += " wd_search_res_rmk "} else if (!data.remark) {cls = cls.replace(" wd_search_res_rmk ", " ")}
+  resDiv.className = cls
+};
+const upgradeFun = g => {
   g.className += " wd_search_res"
-  let url = $("cite", g)[0].firstChild.textContent;
+  let url = $("a", g)[0].getAttribute("href");
   let groupName = getUrlGroupName(url);
   let key = getGroupStoreKey(groupName);
   // 加入工具条
@@ -14,22 +21,23 @@ $("#search div.g").forEach(g => {
   let groupTitle = `<div class="wd_search_res_upgrade_title">${i18n("main_name")}</div>`;
   let nod = document.createElement("div");
   nod.className = "wd_search_res_upgrade";
-  nod.appendChild(createNode(`<div class="wd_search_res_upgrade_tips" style="min-height: ${g.offsetHeight}px;height: ${g.offsetHeight}px;">${groupTitle}<div class="wd_search_res_upgrade_remark"></div></div>`));
+  nod.style.width = g.offsetWidth + "px";
   nod.appendChild(createNode(`<div class="wd_search_res_upgrade_tool" ondragstart="return false;" data-key="${key}" data-gpname="${groupName}">${groupHideBtn}${groupHideNoBtn}${groupIncognitoBtn}${groupIncognitoNoBtn}${groupRemarkBtn}${groupDeleteBtn}</div>`));
+  nod.appendChild(createNode(`<div class="wd_search_res_upgrade_tips">${groupTitle}<div class="wd_search_res_upgrade_remark"></div></div>`));
   g.insertBefore(nod, g.firstChild);
   chrome.storage.local.get(key, res => {
     let data = res[key];
     if (!data)
       return;
-    g.className += ` ${data.rm ? " wd_search_res_rm" : ""}${data.hd ? " wd_search_res_hd" : ""}${data.remark && data.remark.length ? " wd_search_res_rmk" : ""}`;
+    setResClass(g, data);
     if (data.remark) {
       $(".wd_search_res_upgrade_remark", g)[0].innerHTML = data.remark;
     }
     if (data.time) {
       $(".wd_search_res_upgrade_title", g)[0].innerText += ": " + new Date(data.time).format("yyyy-MM-dd");
     }
-  })
-});
+ })
+};
 const setSiteIncognito = (key, groupName, groupDiv, ifrm) => {
   chrome.storage.local.get(key, res => {
     let _obj = res[key] || {
@@ -45,7 +53,7 @@ const setSiteIncognito = (key, groupName, groupDiv, ifrm) => {
       if (chrome.runtime.lastError) {
         alert(i18n("msg_err") + chrome.runtime.lastError.message)
       } else {
-        groupDiv.parentElement.className = `g wd_search_res ${_obj.rm ? " wd_search_res_rm" : ""}${_obj.hd ? " wd_search_res_hd" : ""}${_obj.remark && _obj.remark.length ? " wd_search_res_rmk" : ""}`
+        setResClass(groupDiv.parentElement, _obj);
       }
     })
   })
@@ -65,7 +73,7 @@ const setSiteHide = (key, groupName, groupDiv, ifhd) => {
       if (chrome.runtime.lastError) {
         alert(i18n("msg_err") + chrome.runtime.lastError.message)
       } else {
-        groupDiv.parentElement.className = `g wd_search_res ${_obj.rm ? " wd_search_res_rm" : ""}${_obj.hd ? " wd_search_res_hd" : ""}${_obj.remark && _obj.remark.length ? " wd_search_res_rmk" : ""}`
+        setResClass(groupDiv.parentElement, _obj);
       }
     })
   })
@@ -74,14 +82,15 @@ const setSiteRemark = (key, groupName, groupDiv) => {
   if ($(".wd_search_res_upgrade_remarkeditor", groupDiv).length > 0) {
     return;
   }
-  groupDiv.parentElement.className += " wd_search_res_rmk";
+  if (groupDiv.parentElement.className.indexOf(" wd_search_res_rmk ") < 0) {
+    groupDiv.parentElement.className += " wd_search_res_rmk ";
+  }
   let _remark = $(".wd_search_res_upgrade_remark", groupDiv)[0].innerHTML;
   let _remarkArea = document.createElement("textarea");
   _remarkArea.className = "wd_search_res_upgrade_remarkeditor";
   _remarkArea.value = _remark;
   groupDiv.className = "wd_search_res_upgrade editing";
   $(".wd_search_res_upgrade_tips", groupDiv)[0].appendChild(_remarkArea);
-  // groupDiv.appendChild(_remarkArea);
   _remarkArea.style.height = _remarkArea.scrollHeight + "px";
   _remarkArea.addEventListener("input", e => {
     _remarkArea.style.height = 'auto';
@@ -95,7 +104,7 @@ const setSiteRemark = (key, groupName, groupDiv) => {
         remark: ""
       };
       _obj.key = key;
-      _obj.remark = _remarkArea.value ? _remarkArea.value : undefined;
+      _obj.remark = _remarkArea.value && _remarkArea.value.trim().length ? _remarkArea.value : undefined;
       _obj.time = _obj.time || new Date().format("yyyy-MM-dd HH:mm:ss");
       let _store = {};
       _store[key] = _obj;
@@ -105,14 +114,14 @@ const setSiteRemark = (key, groupName, groupDiv) => {
         } else {
           $(".wd_search_res_upgrade_remark", groupDiv)[0].innerHTML = _remarkArea.value;
           _remarkArea.remove();
-          groupDiv.parentElement.className = `g wd_search_res ${_obj.rm ? " wd_search_res_rm" : ""}${_obj.hd ? " wd_search_res_hd" : ""}${_obj.remark && _obj.remark.length ? " wd_search_res_rmk" : ""}`
+          setResClass(groupDiv.parentElement, _obj);
         }
       })
     });
   });
   _remarkArea.focus();
 };
-$("#search")[0].addEventListener("click", e => {
+window.addEventListener("click", e => {
   let target = e.target;
   let div = target.parentElement;
   let name = target.getAttribute("name");
@@ -137,4 +146,6 @@ $("#search")[0].addEventListener("click", e => {
   } else if (name === "btn_sites_hide") {
     setSiteHide(_key, _groupName, div.parentElement, true);
   }
-})
+});
+$("#search div.g").forEach(upgradeFun);
+$("#rso g-card").forEach(upgradeFun);

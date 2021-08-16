@@ -1,7 +1,3 @@
-body:not(.searchpage_upgrade) .page_upgrade {
-  visibility: hidden !important;
-}
-
 [name=ui_title] {
   background-color: #3d69c1;
   height: 2rem;
@@ -115,6 +111,14 @@ body:not(.searchpage_upgrade) .page_upgrade {
 #sites .has-remark {
   background-color: #d5fc00;
 }
+
+.item-btn:hover {
+  font-weight: bolder;
+}
+
+.item:hover {
+  background-color: #cacaca70 !important;
+}
 #sites .item .remark_editor {
   margin: 0.3rem 1.5rem;
   padding: 0.3rem 0.5rem;
@@ -131,10 +135,7 @@ body:not(.searchpage_upgrade) .page_upgrade {
   transition: height 100ms linear;
 }
 
-.item-btn:hover {
-  font-weight: bolder;
-}
-
-.item:hover {
-  background-color: #cacaca70 !important;
+.textcontent {
+  margin: 1rem;
+  color: #009688;
 }
