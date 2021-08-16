@@ -147,4 +147,4 @@ window.addEventListener("click", e => {
     setSiteHide(_key, _groupName, div.parentElement, true);
   }
 });
-$("#b_results li.b_algo, #b_results li.b_ans.b_mop").forEach(upgradeFun);
+$("#b_results>li").forEach(upgradeFun);

@@ -21,7 +21,7 @@
   display: none;
   position: absolute;
   box-sizing: border-box;
-  z-index: 100;
+  z-index: 3;
   text-align: right;
   background: none;
 }
@@ -80,10 +80,10 @@
   transition: margin 100ms linear;
 }
 .wd_search_res_upgrade_tool:hover ~ .wd_search_res_upgrade_tips {
-  z-index: 99;
+  z-index: 2;
 }
 .wd_search_res:hover .wd_search_res_upgrade_tips {
-  z-index: 99;
+  z-index: 2;
 }
 .wd_search_res_rmk .wd_search_res_upgrade_tips {
   display: block;
@@ -115,7 +115,7 @@
 .wd_search_res:hover .wd_search_res_upgrade_tips {
   margin-left: calc(100% + 20px);
   height: auto !important;
-  z-index: 99;
+  z-index: 2;
 }
 /* 填写备注的输入框 */
 .wd_search_res_upgrade_remarkeditor {
@@ -134,7 +134,7 @@
 }
 .wd_search_res_upgrade.editing .wd_search_res_upgrade_tips {
   height: auto !important;
-  z-index: 100;
+  z-index: 2;
 }
 .wd_search_res_upgrade.editing .wd_search_res_upgrade_remark {
   display: none;
@@ -160,9 +160,13 @@
   opacity: 0.5 !important;
 }
 
+/* bing 额外 */
 .b_adSlug {
   color: red !important;
   border: 1px solid red !important;
   font-size: larger !important;
   font-weight: bolder !important;
+}
+#b_context {
+  position: absolute;
 }
