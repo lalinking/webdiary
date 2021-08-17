@@ -4,3 +4,6 @@
 https://chrome.google.com/webstore/detail/web-record-manager/jokoalpdfppeolhnfljmfecbifcfadhh?hl=zh-CN&authuser=0
 
 Open source, small plugins that enhance the functionality of new tabs. Quickly search bookmarks, history. You can easily manage your browsing history and block some useless records on the google search page.
+
+# lib
+/lib/pako.min.js: https://github.com/nodeca/pako
