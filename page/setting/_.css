@@ -1,3 +1,4 @@
+body:not(.searchpage_upgrade) .page_upgrade {visibility: hidden !important;}
 [name=ui_title] {
   background-color: #3d69c1;
   height: 2rem;

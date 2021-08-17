@@ -36,6 +36,9 @@ const upgradeFun = g => {
     if (data.time) {
       $(".wd_search_res_upgrade_title", g)[0].innerText += ": " + new Date(data.time).format("yyyy-MM-dd");
     }
+    if (data.hd) {
+      g.parentElement.appendChild(g)
+    }
  })
 };
 const setSiteIncognito = (key, groupName, groupDiv, ifrm) => {

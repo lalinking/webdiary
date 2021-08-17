@@ -15,9 +15,9 @@
 /* 增强元素上的样式：工具栏 */
 .wd_search_res_upgrade_tool {
   box-sizing: border-box;
-  margin: 0;
   padding: 0;
-  width: 100%;
+  margin: 0 0 0 calc(100% - 75px);
+  width: 72px;
   display: none;
   position: absolute;
   box-sizing: border-box;
