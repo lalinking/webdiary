@@ -18,7 +18,7 @@ const upgradeFun = g => {
   let groupIncognitoNoBtn = `<img oncontextmenu="return false;" ondragstart="return false;" name="btn_sites_incognito" src="${chrome.extension.getURL('/resource/incognito-no.png')}" title="${i18n("main_name")}: ${i18n("msg_sites_incognito")}" />`;
   let groupRemarkBtn = `<img oncontextmenu="return false;" ondragstart="return false;" name="btn_sites_remark" src="${chrome.extension.getURL('/resource/remark.png')}" title="${i18n("main_name")}: ${i18n("msg_sites_remark")}" />`;
   let groupDeleteBtn = `<img oncontextmenu="return false;" ondragstart="return false;" name="btn_sites_delete" src="${chrome.extension.getURL('/resource/delete-x.png')}" />`;
-  let groupTitle = `<div class="wd_search_res_upgrade_title">${i18n("main_name")}</div>`;
+  let groupTitle = `<div class="wd_search_res_upgrade_title"></div>`;
   let nod = document.createElement("div");
   nod.className = "wd_search_res_upgrade";
   nod.style.width = g.offsetWidth + "px";
@@ -150,5 +150,5 @@ window.addEventListener("click", e => {
     setSiteHide(_key, _groupName, div.parentElement, true);
   }
 });
-$("#search div.g").forEach(upgradeFun);
+$("#search div.g:not(.mnr-c):not(.g-blk)").forEach(upgradeFun);
 $("#rso g-card").forEach(upgradeFun);
