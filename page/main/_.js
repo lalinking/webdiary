@@ -64,7 +64,7 @@ const appendResult = (info) => {
   let countAndDate = `<span class="content-item-visitcount ">${info.visitCount}</span><span class="content-item-date">${info.lastVisitTime}</span>`;
   let detail = `<div class="content-item-detail"><div class="text-ellipsis">${info.title}<br>${info.url}</div></div>`;
   let itemA = `<a target="_blank" href="${info.url}">${detail}<span class="text-ellipsis">${info.title}</span></a>`;
-  let item = createNode(`<div class="content-item" name="item" id="item-${number}">${bookmark}${countAndDate}${itemA}<button name="rm_history" class="btn item-btn">×</button></div>`);
+  let item = createNode(`<div class="content-item" name="item" id="item-${number}">${bookmark}${countAndDate}${itemA}<img class="btn item-btn" name="rm_history" src="/resource/delete-x.png" /></div>`);
   $group.appendChild(item);
   if ($group.children.length > 14) {
     item.className += " content-item-more";
