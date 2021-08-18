@@ -208,10 +208,17 @@ body:not(.searchpage_upgrade) .page_upgrade {display: none !important;}
 .bookmark-add, .bookmark {
   color: #0718e8;
   font-size: 1.1em;
+  font-weight: bold;
   position: absolute;
   cursor: pointer;
   user-select: none;
   display: none;
+  width: 1.8rem;
+  text-align: center;
+}
+.bookmark-add:hover, .bookmark:hover {
+  color: #0013ff;
+  font-size: 1.5em;
 }
 
 .bookmark, .content-item:hover .bookmark-add {
