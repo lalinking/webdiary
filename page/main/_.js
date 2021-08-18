@@ -70,12 +70,43 @@ const appendResult = (info) => {
     item.className += " content-item-more";
   }
 };
+const setBrowseInfo = (info, async) => {
+  if (info.visitCount == undefined) {
+    async.call(() => {
+      chrome.history.getVisits({
+        url: info.url
+      }, res2 => {
+        info.visitCount = res2.length;
+        let lastVisitTime = 0;
+        res2.forEach(v => {
+          lastVisitTime = Math.max(v.visitTime, lastVisitTime);
+        });
+        if (lastVisitTime) {
+          info.lastVisitTime = lastVisitTime
+        }
+        async.next()
+      })
+    })
+  }
+  if (!info.fromBookmark) {
+    async.call(() => {
+      chrome.bookmarks.search(info.url, res2 => {
+        if (res2.length > 0) {
+          info.fromBookmark = true;
+          info.title = res2[0].title;
+          info.bookMarkID = res2[0].id;
+        }
+        async.next()
+      })
+    })
+  }
+};
 const search = () => {
   $contentDiv.innerHTML = "";
   contentMap.clear();
   let async = new Async();
   let val = $search.value;
-  let warnSize = val ? 200 : 50;
+  let warnSize = val ? 100 : 50;
   async.call(() => {
     chrome.bookmarks.search(val, res1 => {
       res1.forEach(r => {
@@ -87,22 +118,7 @@ const search = () => {
         r.fromBookmark = true;
         r.bookMarkID = r.id;
         contentMap.set(key, r);
-        warnSize++;
-        async.call(() => {
-          chrome.history.getVisits({
-            url: _url
-          }, res2 => {
-            r.visitCount = res2.length;
-            let lastVisitTime = 0;
-            res2.forEach(v => {
-              lastVisitTime = Math.max(v.visitTime, lastVisitTime);
-            });
-            if (lastVisitTime) {
-              r.lastVisitTime = lastVisitTime
-            }
-            async.next()
-          })
-        })
+        setBrowseInfo(r, async)
       });
       async.next()
     })
@@ -111,7 +127,7 @@ const search = () => {
       text: val,
       startTime: 0,
       endTime: Date.now(),
-      maxResults: val ? 200 : 50
+      maxResults: val ? 100 : 50
     }, res1 => {
       res1.forEach(r => {
         r.group = r.group || getUrlGroupName(r.url);
@@ -123,6 +139,7 @@ const search = () => {
         } else {
           contentMap.set(key, r);
         }
+        setBrowseInfo(r, async);
       });
       async.next()
     })
@@ -139,7 +156,6 @@ const search = () => {
     })
   }
 };
-
 const addToMarkbook = (info, target) => {
   let _title = prompt(i18n("btn-addbookmark"), info.title);
   if (_title) {

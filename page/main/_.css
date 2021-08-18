@@ -205,7 +205,7 @@ body:not(.searchpage_upgrade) .page_upgrade {display: none !important;}
   text-align: right;
 }
 
-.bookmark-add {
+.bookmark-add, .bookmark {
   color: #0718e8;
   font-size: 1.1em;
   position: absolute;
@@ -214,12 +214,7 @@ body:not(.searchpage_upgrade) .page_upgrade {display: none !important;}
   display: none;
 }
 
-.bookmark {
-  color: #0088ff;
-  cursor: pointer;
-}
-
-.content-item:hover .bookmark-add {
+.bookmark, .content-item:hover .bookmark-add {
   display: block;
 }
 
