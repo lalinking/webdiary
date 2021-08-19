@@ -8,6 +8,10 @@
   border-radius: 3px;
 }
 
+html {
+ font-size: 16px;
+}
+
 html, body {
   background-color: #efefef;
   overflow: hidden;
@@ -20,6 +24,7 @@ body {
   margin: 0;
   height: 100%;
   width: 50rem;
+  font-size: 12px;
 }
 
 .text-ellipsis {

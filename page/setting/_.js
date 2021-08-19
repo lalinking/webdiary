@@ -1,4 +1,4 @@
-if (location.search == "?from=opt") {
+if (location.search != "?from=act") {
   $("html, body").forEach(e => {
     e.style = "width: calc(100% - 1px); height: calc(100% - 1px);"
   })

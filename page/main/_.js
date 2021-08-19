@@ -1,3 +1,9 @@
+if (location.search != "?from=act") {
+  document.title = i18n("main_name");
+  $("html, body").forEach(e => {
+    e.style = "width: calc(100% - 1px); height: calc(100% - 1px);"
+  })
+}
 const contentMap = new Map();
 const $rootDiv = $(".root-div")[0];
 const $search = $(".search-input")[0];
@@ -12,6 +18,38 @@ const showInfo = msg => {
 };
 
 const appendResult = (info) => {
+  let groupDivID = "group-" + info.group.hashCode();
+  let $group = $("#" + groupDivID, $contentDiv);
+  if ($group.length > 0) {
+    $group = $group[0];
+  } else {
+    let groupHideBtn = `<img class="btn page_upgrade" name="btn_sites_ac_hide" src="/resource/hide.png" title="${i18n("msg_sites_hide")}" />`;
+    let groupHideNoBtn = `<img class="btn page_upgrade" name="btn_sites_hide" src="/resource/hide-no.png" title="${i18n("msg_sites_hide")}" />`;
+    let groupIncognitoBtn = `<img class="btn" name="btn_sites_ac_incognito" src="/resource/incognito.png" title="${i18n("msg_sites_incognito")}" />`;
+    let groupIncognitoNoBtn = `<img class="btn" name="btn_sites_incognito" src="/resource/incognito-no.png" title="${i18n("msg_sites_incognito")}" />`;
+    let groupDeleteBtn = `<img class="btn" name="btn_sites_delete" src="/resource/delete.png" title="${i18n("msg_sites_delete")}" />`;
+    let groupRemarkBtn = `<img class="btn" name="btn_sites_remark" src="/resource/remark.png" title="${i18n("msg_sites_remark")}" />`;
+    let favicon = `<img class="favicon" src="chrome://favicon/http://${info.group}"/>`;
+    let groupTool = `<div class="tool-group-div">${groupHideBtn}${groupHideNoBtn}${groupIncognitoBtn}${groupIncognitoNoBtn}${groupDeleteBtn}${groupRemarkBtn}</div>`;
+    $group = createNode(`<div class="content-group" name="group" data-groupname="${info.group}" id="${groupDivID}">${favicon}<span class="text-ellipsis">${info.group}</span>${groupTool}<div name='remark'></div></div>`);
+    $contentDiv.appendChild($group);
+    let key = getGroupStoreKey(info.group);
+    chrome.storage.local.get(key, res => {
+      let g = res[key];
+      if (!g)
+        return;
+      if (g.rm) {
+        $group.setAttribute("data-rm", "true");
+        $group.setAttribute("title", i18n("msg_sites_incognito"));
+      }
+      if (g.hd) {
+        $group.setAttribute("data-hd", "true");
+        $group.setAttribute("title", i18n("msg_sites_incognito"));
+      }
+      if (g.remark)
+        $("[name=remark]", $group)[0].innerHTML = g.remark;
+    })
+  }
   setBrowseInfo(info, () => {
     if (info.lastVisitTime) {
       info.lastVisitTime = i18n("ui_visitdate") + new Date(info.lastVisitTime).format("yyyy-MM-dd HH:mm")
@@ -30,38 +68,6 @@ const appendResult = (info) => {
     } else {
       info.visitCount = "-"
     }
-    let groupDivID = "group-" + info.group.hashCode();
-    let $group = $("#" + groupDivID, $contentDiv);
-    if ($group.length > 0) {
-      $group = $group[0];
-    } else {
-      let groupHideBtn = `<img class="btn page_upgrade" name="btn_sites_ac_hide" src="/resource/hide.png" title="${i18n("msg_sites_hide")}" />`;
-      let groupHideNoBtn = `<img class="btn page_upgrade" name="btn_sites_hide" src="/resource/hide-no.png" title="${i18n("msg_sites_hide")}" />`;
-      let groupIncognitoBtn = `<img class="btn" name="btn_sites_ac_incognito" src="/resource/incognito.png" title="${i18n("msg_sites_incognito")}" />`;
-      let groupIncognitoNoBtn = `<img class="btn" name="btn_sites_incognito" src="/resource/incognito-no.png" title="${i18n("msg_sites_incognito")}" />`;
-      let groupDeleteBtn = `<img class="btn" name="btn_sites_delete" src="/resource/delete.png" title="${i18n("msg_sites_delete")}" />`;
-      let groupRemarkBtn = `<img class="btn" name="btn_sites_remark" src="/resource/remark.png" title="${i18n("msg_sites_remark")}" />`;
-      let favicon = `<img class="favicon" src="chrome://favicon/http://${info.group}"/>`;
-      let groupTool = `<div class="tool-group-div">${groupHideBtn}${groupHideNoBtn}${groupIncognitoBtn}${groupIncognitoNoBtn}${groupDeleteBtn}${groupRemarkBtn}</div>`;
-      $group = createNode(`<div class="content-group" name="group" data-groupname="${info.group}" id="${groupDivID}">${favicon}<span class="text-ellipsis">${info.group}</span>${groupTool}<div name='remark'></div></div>`);
-      $contentDiv.appendChild($group);
-      let key = getGroupStoreKey(info.group);
-      chrome.storage.local.get(key, res => {
-        let g = res[key];
-        if (!g)
-          return;
-        if (g.rm) {
-          $group.setAttribute("data-rm", "true");
-          $group.setAttribute("title", i18n("msg_sites_incognito"));
-        }
-        if (g.hd) {
-          $group.setAttribute("data-hd", "true");
-          $group.setAttribute("title", i18n("msg_sites_incognito"));
-        }
-        if (g.remark)
-          $("[name=remark]", $group)[0].innerHTML = g.remark;
-      })
-    }
     let countAndDate = `<span class="content-item-visitcount ">${info.visitCount}</span><span class="content-item-date">${info.lastVisitTime}</span>`;
     let detail = `<div class="content-item-detail"><div class="text-ellipsis">${info.title}<br>${info.url}</div></div>`;
     let itemA = `<a target="_blank" href="${info.url}">${detail}<span class="text-ellipsis">${info.title}</span></a>`;
@@ -73,7 +79,16 @@ const appendResult = (info) => {
   })
 };
 const setBrowseInfo = (info, callback) => {
-  if (info.visitCount == undefined) {
+  if (!info.fromBookmark) {
+    chrome.bookmarks.search(info.url, res2 => {
+      if (res2.length > 0) {
+        info.fromBookmark = true;
+        info.title = res2[0].title;
+        info.bookMarkID = res2[0].id;
+      }
+      callback(info)
+    })
+  } else if (info.visitCount == undefined) {
      chrome.history.getVisits({
        url: info.url
      }, res2 => {
@@ -88,19 +103,9 @@ const setBrowseInfo = (info, callback) => {
        callback(info)
      })
   }
-  if (!info.fromBookmark) {
-    chrome.bookmarks.search(info.url, res2 => {
-      if (res2.length > 0) {
-        info.fromBookmark = true;
-        info.title = res2[0].title;
-        info.bookMarkID = res2[0].id;
-      }
-      callback(info)
-    })
-  }
 };
+
 const search = () => {
-  $contentDiv.innerHTML = "";
   contentMap.clear();
   let async = new Async();
   let val = $search.value;
@@ -128,7 +133,7 @@ const search = () => {
     }, res1 => {
       res1.forEach(r => {
         r.group = r.group || getUrlGroupName(r.url);
-        let key = r.url.replace(/^https/, "http").hashCode();
+        let key = "g" + r.url.replace(/^https/, "http").hashCode();
         if (contentMap.has(key)) {
           let _r = contentMap.get(key);
           _r.lastVisitTime = r.lastVisitTime;
@@ -140,6 +145,7 @@ const search = () => {
       async.next()
     })
   }).end = () => {
+    $contentDiv.innerHTML = "";
     contentMap.forEach(appendResult);
     if (val && contentMap.size > warnSize - 20) {
       showInfo(i18n("msg_more"))
@@ -334,7 +340,7 @@ $search.addEventListener("keyup", e => {
   }
 });
 const itemClickFun = (e, div) => {
-  let key = parseInt(div.id.replace("item-", ""));
+  let key = "g" + parseInt(div.id.replace("item-", ""));
   let info = contentMap.get(key);
   if (e.target.className === "bookmark-add") {
     addToMarkbook(info, e.target)
@@ -382,7 +388,7 @@ $contentDiv.addEventListener("click", e => {
   }
 });
 $(".setting-btn")[0].addEventListener("click", () => {
-  location.href = "/page/setting/_.html"
+  location.href = "/page/setting/page.html" + location.search
 });
 document.addEventListener("keydown", e => {
   if (e.target.tagName == "TEXTAREA" || (e.target.tagName == "INPUT" && e.keyCode == 13)) {

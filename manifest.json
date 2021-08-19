@@ -8,7 +8,7 @@
   },
   "author": "Ric forveer2013@gmail.com",
   "default_locale": "zh_CN",
-  "options_page": "/page/setting/_.html?from=opt",
+  "options_page": "/page/setting/page.html",
   "background": {
     "scripts": [
       "lib/pako.min.js",
@@ -20,7 +20,7 @@
   "browser_action": {
     "default_title": "__MSG_main_name__ \n __MSG_main_desc__",
     "default_icon": "/resource/icon48.png",
-    "default_popup": "/page/main/_.html"
+    "default_popup": "/page/main/page.html?from=act"
   },
   "minimum_chrome_version": "38",
   "permissions": [

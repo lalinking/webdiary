@@ -26,6 +26,7 @@ const upgradeFun = g => {
   nod.appendChild(createNode(`<div class="wd_search_res_upgrade_tips">${groupTitle}<div class="wd_search_res_upgrade_remark"></div></div>`));
   g.insertBefore(nod, g.firstChild);
   chrome.storage.local.get(key, res => {
+    $(".wd_search_res_upgrade_title", g)[0].innerText = ": " + new Date().format("yyyy-MM-dd");
     let data = res[key];
     if (!data)
       return;
