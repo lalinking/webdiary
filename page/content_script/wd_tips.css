@@ -98,6 +98,7 @@
   display: block;
 }
 .wd_search_res_upgrade_title {
+  height: 16px;
   background-image:url('chrome-extension://__MSG_@@extension_id__/resource/icon48.png');
   background-repeat: no-repeat;
   background-size: 16px;
