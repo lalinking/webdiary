@@ -33,9 +33,7 @@ const upgradeFun = g => {
     if (data.remark) {
       $(".wd_search_res_upgrade_remark", g)[0].innerHTML = data.remark;
     }
-    if (data.time) {
-      $(".wd_search_res_upgrade_title", g)[0].innerText += ": " + new Date(data.time).format("yyyy-MM-dd");
-    }
+    $(".wd_search_res_upgrade_title", g)[0].innerText = ": " + new Date(data.time ||　Date.now()).format("yyyy-MM-dd");
     if (data.hd) {
       g.parentElement.appendChild(g)
     }
