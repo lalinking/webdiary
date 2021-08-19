@@ -7,7 +7,9 @@
   margin-top: -5px;
   margin-left: -15px;
 }
-.wd_search_res:hover + * {
+.wd_search_res:hover + div,
+.wd_search_res:hover + *:not(div) + div,
+.wd_search_res:hover + *:not(div) ~ *:not(div) + div {
   margin-top: -5px;
 }
 .wd_search_res_rmk {}
