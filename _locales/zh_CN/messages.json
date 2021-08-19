@@ -7,7 +7,6 @@
   "msg_cancel": {"message": "已取消操作"},
   "msg_processing": {"message": "正在处理，请勿关闭页面"},
   "msg_sites_incognito": {"message":"不记录浏览历史"},
-  "msg_sites_remark": {"message":"填写备注"},
   "msg_sites_hide": {"message": "在搜索页隐藏"},
   "msg_err": {"message": "出错了："},
   "msg_sites_delete": {"message":"删除浏览记录"},

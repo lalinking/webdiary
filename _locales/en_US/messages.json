@@ -7,7 +7,6 @@
   "msg_cancel": {"message": "Operation canceled"},
   "msg_processing": {"message": "Processing, please do not close the page"},
   "msg_sites_incognito": {"message":"Do not record browsing history"},
-  "msg_sites_remark": {"message":"Fill in the remarks"},
   "msg_sites_hide": {"message": "Hide on search page"},
   "msg_err": {"message": "error: "},
   "msg_sites_delete": {"message":"Delete browsing history"},
