@@ -75,6 +75,10 @@ const appendResult = (info) => {
     $group.appendChild(item);
     if ($group.children.length > 14) {
       item.className += " content-item-more";
+	  if ($group.className == "content-group") {
+  	    $group.className += " large-group";
+        $group.appendChild(createNode(`<div class="showmore" name="more"><a href="javascript:">${i18n("ui_showmore")}</a></div>`))
+	  }
     }
   })
 };
@@ -102,6 +106,8 @@ const setBrowseInfo = (info, callback) => {
        }
        callback(info)
      })
+  } else {
+   callback(info)
   }
 };
 
@@ -116,7 +122,7 @@ const search = () => {
         let _url = r.url;
         if (!_url)
           return;
-        let key = _url.replace(/^https/, "http").hashCode();
+        let key = "g" + _url.replace(/^https/, "http").hashCode();
         r.group = getUrlGroupName(_url);
         r.fromBookmark = true;
         r.bookMarkID = r.id;
@@ -146,16 +152,12 @@ const search = () => {
     })
   }).end = () => {
     $contentDiv.innerHTML = "";
-    contentMap.forEach(appendResult);
     if (val && contentMap.size > warnSize - 20) {
       showInfo(i18n("msg_more"))
     } else if (contentMap.size === 0) {
-      showInfo(i18n("msg_nores"))
+      return showInfo(i18n("msg_nores"))
     }
-    $(".content-item-more:last-child").forEach(item => {
-      item.parentElement.className += " large-group";
-      item.parentElement.appendChild(createNode(`<div class="showmore" name="more"><a href="javascript:">${i18n("ui_showmore")}</a></div>`))
-    })
+    contentMap.forEach(appendResult);
   }
 };
 const addToMarkbook = (info, target) => {
