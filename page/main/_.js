@@ -115,28 +115,33 @@ const search = () => {
   contentMap.clear();
   let async = new Async();
   let val = $search.value;
-  let warnSize = val ? 100 : 50;
+  let warnSize = 50;
+  if (val) {
+    async.call(() => {
+      chrome.bookmarks.search(val, res1 => {
+        res1.forEach(r => {
+          let _url = r.url;
+          if (!_url)
+            return;
+          let key = "g" + _url.replace(/^https/, "http").hashCode();
+          r.group = getUrlGroupName(_url);
+          r.fromBookmark = true;
+          r.bookMarkID = r.id;
+          contentMap.set(key, r);
+          warnSize ++;
+        });
+        async.next()
+      })
+    });
+  }
   async.call(() => {
-    chrome.bookmarks.search(val, res1 => {
-      res1.forEach(r => {
-        let _url = r.url;
-        if (!_url)
-          return;
-        let key = "g" + _url.replace(/^https/, "http").hashCode();
-        r.group = getUrlGroupName(_url);
-        r.fromBookmark = true;
-        r.bookMarkID = r.id;
-        contentMap.set(key, r);
-      });
-      async.next()
-    })
-  }).call(() => {
     chrome.history.search({
       text: val,
       startTime: 0,
       endTime: Date.now(),
-      maxResults: val ? 100 : 50
+      maxResults: 50
     }, res1 => {
+      if (res1.length >= 50) {warnSize = 0}
       res1.forEach(r => {
         r.group = r.group || getUrlGroupName(r.url);
         let key = "g" + r.url.replace(/^https/, "http").hashCode();
@@ -152,7 +157,7 @@ const search = () => {
     })
   }).end = () => {
     $contentDiv.innerHTML = "";
-    if (val && contentMap.size > warnSize - 20) {
+    if (val && contentMap.size >= warnSize) {
       showInfo(i18n("msg_more"))
     } else if (contentMap.size === 0) {
       return showInfo(i18n("msg_nores"))
@@ -431,5 +436,5 @@ document.addEventListener("keydown", e => {
   }
 });
 
-search();
 $search.focus();
+setTimeout(search, 100);
