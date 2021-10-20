@@ -16,6 +16,7 @@ const showInfo = msg => {
     $msgDiv.className = "msg-div msg-flash";
   }, 100);
 };
+let resListSize = 50;
 
 const appendResult = (info) => {
   let groupDivID = "group-" + info.group.hashCode();
@@ -115,7 +116,7 @@ const search = () => {
   contentMap.clear();
   let async = new Async();
   let val = $search.value;
-  let warnSize = 50;
+  let warnSize = resListSize;
   if (val) {
     async.call(() => {
       chrome.bookmarks.search(val, res1 => {
@@ -139,9 +140,9 @@ const search = () => {
       text: val,
       startTime: 0,
       endTime: Date.now(),
-      maxResults: 50
+      maxResults: resListSize
     }, res1 => {
-      if (res1.length >= 50) {warnSize = 0}
+      if (res1.length >= resListSize) {warnSize = 0}
       res1.forEach(r => {
         r.group = r.group || getUrlGroupName(r.url);
         let key = "g" + r.url.replace(/^https/, "http").hashCode();
@@ -437,4 +438,10 @@ document.addEventListener("keydown", e => {
 });
 
 $search.focus();
-setTimeout(search, 100);
+chrome.storage.local.get("setting_list_size", res => {
+  let _size = res["setting_list_size"];
+  if (_size) {
+    resListSize = parseInt(_size) || 50;
+  }
+  setTimeout(search, 50);
+});

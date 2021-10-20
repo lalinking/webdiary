@@ -204,6 +204,21 @@ bind({
   ui_authorization_tips: i18n("ui_setting_authorization_tips"),
   ui_sites: i18n("ui_setting_sites"),
   ui_sites_tips: i18n("ui_setting_sites_tips"),
+  ui_setting_other: i18n("ui_setting_other"),
+  ui_setting_other_maxsize: i18n("ui_setting_other_maxsize"),
   ui_about: i18n("ui_setting_about"),
   ui_about_content: i18n("ui_setting_about_content")
 }, document);
+
+chrome.storage.local.get("setting_list_size", res => {
+  let resListSize = 50;
+  let _size = res["setting_list_size"];
+  if (_size) {
+    resListSize = parseInt(_size) || 50;
+  }
+  bind({value_setting_other_maxsize: resListSize})
+});
+$("input[name=value_setting_other_maxsize]")[0].addEventListener("change", e => {
+	let _v = parseInt(e.target.value || 50);
+	chrome.storage.local.set({setting_list_size: Math.max(_v, 50)});
+});

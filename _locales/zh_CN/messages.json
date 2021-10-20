@@ -19,6 +19,8 @@
   "ui_setting_searchpage_upgrade": {"message": "是否启用搜索页增强：\n\t在搜索页面显示备注\n\t您可以将某些网站设置隐藏并在搜索页面缩小他们的排版\n\t您还需要在下方勾选授权，才能实际使用此功能"},
   "ui_setting_authorization": {"message": "授权管理"},
   "ui_setting_authorization_tips": {"message": "* 勾选授权后将处理搜索页的展示结果，展示网站备注、隐藏相关网站。\n* 如果搜索域名不能对应，请修改为正确的域名。例如我的谷歌搜索搜索页网址是 https://www.google.com.hk/search?q=shpass，则需要改成 https://www.google.com.hk/\n* 目前仅支持谷歌和必应。"},
+  "ui_setting_other": {"message": "其他设置"},
+  "ui_setting_other_maxsize": {"message": "最大搜索结果条数"},
   "ui_setting_sites": {"message": "我的网站"},
   "ui_setting_sites_tips": {"message": "* 在此处集中管理您备注过的网站。\n* 显示您首次记录该网站的日期。\n* 此处的删除功能并不是删除浏览器历史记录，而是删除该记录项。"},
   "ui_setting_about": {"message": "关于本插件"},

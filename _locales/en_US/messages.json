@@ -19,6 +19,8 @@
   "ui_setting_authorization": {"message": "Authorization management"},
   "ui_setting_searchpage_upgrade": {"message": "Enable search page enhancement:\n\tDisplay notes on the search page\n\tYou can hide some website settings and narrow their layout on the search page\n\tYou also need to check the authorization below to actually use this feature"},
   "ui_setting_authorization_tips": {"message": "* After checking the authorization, the display results of the search page will be processed, website remarks will be displayed, and related websites will be hidden. \n* If the search domain name does not correspond, please modify it to the correct domain name. For example, my Google search search page URL is https://www.google.com.hk/search?q=shpass, it needs to be changed to https://www.google.com.hk/\n* Currently only Google and Bing are supported."},
+  "ui_setting_other": {"message": "Other"},
+  "ui_setting_other_maxsize": {"message": "Maximum search results"},
   "ui_setting_sites": {"message": "My websites"},
   "ui_setting_sites_tips": {"message": "* Centrally manage the sites you have noted here. \n* Shows the date when you first recorded the change of the website. \n* The delete function here is not to delete the browser history, but to delete the record."},
   "ui_setting_about": {"message": "About Me"},
