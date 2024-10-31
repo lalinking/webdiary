@@ -1,4 +1,5 @@
 console.log("backgroud.js start");
+importScripts("lib/pako.min.js", "upgrade.js");
 // 解压
 function unzip(b64Data) {
   let strData = atob(b64Data);

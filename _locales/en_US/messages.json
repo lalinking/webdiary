@@ -24,5 +24,5 @@
   "ui_setting_sites": {"message": "My websites"},
   "ui_setting_sites_tips": {"message": "* Centrally manage the sites you have noted here. \n* Shows the date when you first recorded the change of the website. \n* The delete function here is not to delete the browser history, but to delete the record."},
   "ui_setting_about": {"message": "About Me"},
-  "ui_setting_about_content": {"message": "Source code: https://github.com/ric2cn/webdiary"}
+  "ui_setting_about_content": {"message": "Source code: https://github.com/lalinking/webdiary"}
 }
