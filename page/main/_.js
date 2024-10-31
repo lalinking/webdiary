@@ -18,6 +18,12 @@ const showInfo = msg => {
 };
 let resListSize = 50;
 
+const faviconURL = (url) => {
+  const _url = new URL(chrome.runtime.getURL("/_favicon/"));
+  _url.searchParams.set("pageUrl", url);
+  _url.searchParams.set("size", "32");
+  return _url.toString();
+}
 const appendResult = (info) => {
   let groupDivID = "group-" + info.group.hashCode();
   let $group = $("#" + groupDivID, $contentDiv);
@@ -30,7 +36,7 @@ const appendResult = (info) => {
     let groupIncognitoNoBtn = `<img class="btn" name="btn_sites_incognito" src="/resource/incognito-no.png" title="${i18n("msg_sites_incognito")}" />`;
     let groupDeleteBtn = `<img class="btn" name="btn_sites_delete" src="/resource/delete.png" title="${i18n("msg_sites_delete")}" />`;
     let groupRemarkBtn = `<img class="btn" name="btn_sites_remark" src="/resource/remark.png" title="${i18n("msg_sites_remark")}" />`;
-    let favicon = `<img class="favicon" src="chrome://favicon/http://${info.group}"/>`;
+    let favicon = `<img class="favicon" src="${faviconURL(info.url)}"/>`;
     let groupTool = `<div class="tool-group-div">${groupHideBtn}${groupHideNoBtn}${groupIncognitoBtn}${groupIncognitoNoBtn}${groupDeleteBtn}${groupRemarkBtn}</div>`;
     $group = createNode(`<div class="content-group" name="group" data-groupname="${info.group}" id="${groupDivID}">${favicon}<span class="text-ellipsis">${info.group}</span>${groupTool}<div name='remark'></div></div>`);
     $contentDiv.appendChild($group);

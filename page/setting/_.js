@@ -7,74 +7,6 @@ if (location.search != "?from=act") {
 let $SetPanel = $("#authorization")[0];
 let $ListPanel = $("#sites")[0];
 
-chrome.storage.local.get("setting_urls", res => {
-  let urls = res["setting_urls"] || ["https://www.google.com/", "https://bing.com/"];
-  urls.forEach((url, _index) => {
-    let _url = url;
-    chrome.permissions.contains({
-      origins: [_url]
-    }, active => {
-      let imgDom = `<img class="item-img favicon" src="chrome://favicon/${_url}"/>`;
-      let textDom = `<input class="item-url text-ellipsis" value="${_url}"/>`;
-      let btnDom = `<input name="btn_authorization_active" class="item-btn btn" type="checkbox" ${active ? "checked" : "data-inactive"}/>`;
-      let item = createNode(`<div class="item">${imgDom}${textDom}${btnDom}</div>`);
-      $SetPanel.appendChild(item)
-      $(".item-url", item)[0].addEventListener("change", e => {
-        urls[_index] = e.target.value;
-        chrome.storage.local.set({
-          setting_urls: urls
-        });
-        chrome.permissions.contains({
-          origins: [e.target.value]
-        }, _act => {
-          let _ck = $("[name=btn_authorization_active]", item)[0];
-          if (_act) {
-            _ck.setAttribute("checked", "");
-          } else {
-            _ck.removeAttribute("checked");
-          }
-        });
-      });
-    });
-  })
-});
-chrome.storage.local.get("setting_searchpage_upgrade", res => {
-  let upgrade = res["setting_searchpage_upgrade"];
-  if (upgrade) {
-    document.body.className = "searchpage_upgrade";
-    $("[name=btn_searchpage_upgrade]")[0].checked = true
-  }
-});
-chrome.storage.local.get(null, datas => {
-  let hasRes = false;
-  for (let key in datas) {
-    if (key == "version" || key.startsWith("setting_")) {
-      continue
-    }
-    let data = datas[key];
-    let time;
-    if (data.time) {
-      time = new Date(data.time).format("yyyy-MM-dd")
-    } else {
-      time = ""
-    }
-    let imgDom = `<img class="item-img favicon" src="chrome://favicon/http://${data.name}/"/>`;
-    let groupHideBtn = `<img class="btn item-btn page_upgrade" data-key="${key}" name="btn_sites_ac_hide" src="/resource/hide.png" title="${i18n("msg_sites_hide")}" />`;
-    let groupHideNoBtn = `<img class="btn item-btn page_upgrade" data-key="${key}" name="btn_sites_hide" src="/resource/hide-no.png" title="${i18n("msg_sites_hide")}" />`;
-    let groupIncognitoBtn = `<img class="btn item-btn" data-key="${key}" name="btn_sites_ac_incognito" src="/resource/incognito.png" title="${i18n("msg_sites_incognito")}" />`;
-    let groupIncognitoNoBtn = `<img class="btn item-btn" data-key="${key}" name="btn_sites_incognito" src="/resource/incognito-no.png" title="${i18n("msg_sites_incognito")}" />`;
-    let groupRemarkBtn = `<img class="btn item-btn ${data.remark && data.remark.length ? "has-remark" : ""}" data-key="${key}" name="btn_sites_remark" src="/resource/remark.png" title="${i18n("msg_sites_remark")}" />`;
-    let textDom = `<div class="item-name text-ellipsis">${time}&nbsp;&nbsp;&nbsp;${data.name}</div>`;
-    let groupDeleteBtn = `<img class="item-btn btn" name="btn_sites_delete" data-key="${key}" src="/resource/delete-x.png" />`;
-    let item = createNode(`<div data-rm="${data.rm}" data-hd="${data.hd}" class="item" title="${data.remark}">${imgDom}${textDom}${groupHideBtn}${groupHideNoBtn}${groupIncognitoBtn}${groupIncognitoNoBtn}${groupRemarkBtn}${groupDeleteBtn}</div>`);
-    hasRes = true;
-    $ListPanel.appendChild(item)
-  }
-  if (!hasRes) {
-    $ListPanel.appendChild(createNode(`<div class="textcontent">${i18n("msg_nores")}</div>`))
-  }
-});
-
 const setSiteIncognito = (key, groupDiv, ifrm) => {
   chrome.storage.local.get(key, res => {
     let _obj = res[key] || {
@@ -146,6 +78,80 @@ const setSiteRemark = (key, groupDiv) => {
   });
   _remarkArea.focus();
 };
+const faviconURL = (url) => {
+  const _url = new URL(chrome.runtime.getURL("/_favicon/"));
+  _url.searchParams.set("pageUrl", url);
+  _url.searchParams.set("size", "32");
+  return _url.toString();
+}
+
+chrome.storage.local.get("setting_urls", res => {
+  let urls = res["setting_urls"] || ["https://www.google.com/", "https://bing.com/"];
+  urls.forEach((url, _index) => {
+    let _url = url;
+    chrome.permissions.contains({
+      origins: [_url]
+    }, active => {
+      let imgDom = `<img class="item-img favicon" src="${faviconURL(_url)}"/>`;
+      let textDom = `<input class="item-url text-ellipsis" value="${_url}"/>`;
+      let btnDom = `<input name="btn_authorization_active" class="item-btn btn" type="checkbox" ${active ? "checked" : "data-inactive"}/>`;
+      let item = createNode(`<div class="item">${imgDom}${textDom}${btnDom}</div>`);
+      $SetPanel.appendChild(item)
+      $(".item-url", item)[0].addEventListener("change", e => {
+        urls[_index] = e.target.value;
+        chrome.storage.local.set({
+          setting_urls: urls
+        });
+        chrome.permissions.contains({
+          origins: [e.target.value]
+        }, _act => {
+          let _ck = $("[name=btn_authorization_active]", item)[0];
+          if (_act) {
+            _ck.setAttribute("checked", "");
+          } else {
+            _ck.removeAttribute("checked");
+          }
+        });
+      });
+    });
+  })
+});
+chrome.storage.local.get("setting_searchpage_upgrade", res => {
+  let upgrade = res["setting_searchpage_upgrade"];
+  if (upgrade) {
+    document.body.className = "searchpage_upgrade";
+    $("[name=btn_searchpage_upgrade]")[0].checked = true
+  }
+});
+chrome.storage.local.get(null, datas => {
+  let hasRes = false;
+  for (let key in datas) {
+    if (key == "version" || key.startsWith("setting_")) {
+      continue
+    }
+    let data = datas[key];
+    let time;
+    if (data.time) {
+      time = new Date(data.time).format("yyyy-MM-dd")
+    } else {
+      time = ""
+    }
+    let imgDom = `<img class="item-img favicon" src="${faviconURL(data.name)}/"/>`;
+    let groupHideBtn = `<img class="btn item-btn page_upgrade" data-key="${key}" name="btn_sites_ac_hide" src="/resource/hide.png" title="${i18n("msg_sites_hide")}" />`;
+    let groupHideNoBtn = `<img class="btn item-btn page_upgrade" data-key="${key}" name="btn_sites_hide" src="/resource/hide-no.png" title="${i18n("msg_sites_hide")}" />`;
+    let groupIncognitoBtn = `<img class="btn item-btn" data-key="${key}" name="btn_sites_ac_incognito" src="/resource/incognito.png" title="${i18n("msg_sites_incognito")}" />`;
+    let groupIncognitoNoBtn = `<img class="btn item-btn" data-key="${key}" name="btn_sites_incognito" src="/resource/incognito-no.png" title="${i18n("msg_sites_incognito")}" />`;
+    let groupRemarkBtn = `<img class="btn item-btn ${data.remark && data.remark.length ? "has-remark" : ""}" data-key="${key}" name="btn_sites_remark" src="/resource/remark.png" title="${i18n("msg_sites_remark")}" />`;
+    let textDom = `<div class="item-name text-ellipsis">${time}&nbsp;&nbsp;&nbsp;${data.name}</div>`;
+    let groupDeleteBtn = `<img class="item-btn btn" name="btn_sites_delete" data-key="${key}" src="/resource/delete-x.png" />`;
+    let item = createNode(`<div data-rm="${data.rm}" data-hd="${data.hd}" class="item" title="${data.remark}">${imgDom}${textDom}${groupHideBtn}${groupHideNoBtn}${groupIncognitoBtn}${groupIncognitoNoBtn}${groupRemarkBtn}${groupDeleteBtn}</div>`);
+    hasRes = true;
+    $ListPanel.appendChild(item)
+  }
+  if (!hasRes) {
+    $ListPanel.appendChild(createNode(`<div class="textcontent">${i18n("msg_nores")}</div>`))
+  }
+});
 
 document.body.addEventListener("click", e => {
   let target = e.target;
@@ -161,9 +167,10 @@ document.body.addEventListener("click", e => {
       }
     })
   } else if (name === "btn_authorization_active") {
+    let reqUrl = $(".item-url", div)[0].value;
     if (target.checked) {
       chrome.permissions.request({
-        origins: [$(".item-url", div)[0].value]
+        origins: [reqUrl]
       }, granted => {
         if (!granted) {
           target.checked = false
@@ -171,7 +178,7 @@ document.body.addEventListener("click", e => {
       });
     } else {
       chrome.permissions.remove({
-        origins: [$(".item-url", div)[0].value]
+        origins: [reqUrl]
       }, function (removed) {
         if (!removed) {
           target.checked = true

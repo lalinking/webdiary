@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "__MSG_main_name__",
   "description": "__MSG_main_desc__",
-  "version": "5.3.0",
+  "version": "5.3.1",
   "icons": {
     "48": "/resource/icon48.png"
   },
@@ -22,11 +22,10 @@
     "bookmarks",
     "history",
     "storage",
-    "chrome://favicon/"
+    "favicon"
   ],
-  "optional_permissions": [
-    "http://*/*",
-    "https://*/*"
+  "optional_host_permissions": [
+    "<all_urls>"
   ],
   "web_accessible_resources": [
     {
