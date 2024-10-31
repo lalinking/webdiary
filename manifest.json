@@ -17,7 +17,7 @@
     "default_icon": "/resource/icon48.png",
     "default_popup": "/page/main/page.html?from=act"
   },
-  "minimum_chrome_version": "38",
+  "minimum_chrome_version": "88",
   "permissions": [
     "bookmarks",
     "history",
