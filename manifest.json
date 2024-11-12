@@ -26,19 +26,5 @@
   ],
   "chrome_url_overrides": {
     "newtab": "/page/main/page.html"
-  },
-  "web_accessible_resources": [
-    {
-      "resources": [
-        "/resource/hide.png",
-        "/resource/hide-no.png",
-        "/resource/incognito.png",
-        "/resource/incognito-no.png",
-        "/resource/remark.png",
-        "/resource/delete-x.png",
-        "/resource/icon48.png"
-      ],
-      "matches": ["<all_urls>"]
-    }
-  ]
+  }
 }

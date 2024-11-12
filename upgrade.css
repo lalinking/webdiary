@@ -9,21 +9,22 @@
 }
 
 html {
- font-size: 16px;
+  font-size: 16px;
 }
 
 html, body {
   background-color: #efefef;
   overflow: hidden;
   box-sizing: border-box;
-  height: 36rem;
+  height: 100%;
+  width: 100%;
+  min-height: 36rem;
+  min-width: 50rem;
 }
 
 body {
   padding: 1px 0;
   margin: 0;
-  height: 100%;
-  width: 50rem;
   font-size: 12px;
 }
 
