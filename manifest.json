@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "__MSG_main_name__",
   "description": "__MSG_main_desc__",
-  "version": "5.3.1",
+  "version": "5.4.1",
   "icons": {
     "48": "/resource/icon48.png"
   },
@@ -24,9 +24,9 @@
     "storage",
     "favicon"
   ],
-  "optional_host_permissions": [
-    "<all_urls>"
-  ],
+  "chrome_url_overrides": {
+    "newtab": "/page/main/page.html"
+  },
   "web_accessible_resources": [
     {
       "resources": [

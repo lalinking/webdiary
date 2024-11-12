@@ -4,7 +4,6 @@ if (location.search != "?from=act") {
   })
 }
 
-let $SetPanel = $("#authorization")[0];
 let $ListPanel = $("#sites")[0];
 
 const setSiteIncognito = (key, groupDiv, ifrm) => {
@@ -85,43 +84,13 @@ const faviconURL = (url) => {
   return _url.toString();
 }
 
-chrome.storage.local.get("setting_urls", res => {
-  let urls = res["setting_urls"] || ["https://www.google.com/", "https://bing.com/"];
-  urls.forEach((url, _index) => {
-    let _url = url;
-    chrome.permissions.contains({
-      origins: [_url]
-    }, active => {
-      let imgDom = `<img class="item-img favicon" src="${faviconURL(_url)}"/>`;
-      let textDom = `<input class="item-url text-ellipsis" value="${_url}"/>`;
-      let btnDom = `<input name="btn_authorization_active" class="item-btn btn" type="checkbox" ${active ? "checked" : "data-inactive"}/>`;
-      let item = createNode(`<div class="item">${imgDom}${textDom}${btnDom}</div>`);
-      $SetPanel.appendChild(item)
-      $(".item-url", item)[0].addEventListener("change", e => {
-        urls[_index] = e.target.value;
-        chrome.storage.local.set({
-          setting_urls: urls
-        });
-        chrome.permissions.contains({
-          origins: [e.target.value]
-        }, _act => {
-          let _ck = $("[name=btn_authorization_active]", item)[0];
-          if (_act) {
-            _ck.setAttribute("checked", "");
-          } else {
-            _ck.removeAttribute("checked");
-          }
-        });
-      });
-    });
-  })
+chrome.storage.local.get("setting_authorization_newtab", res => {
+  if (res["setting_authorization_newtab"] != "true") return;
+  $("input[name=btn_setting_authorization_newtab]")[0].checked = true;
 });
-chrome.storage.local.get("setting_searchpage_upgrade", res => {
-  let upgrade = res["setting_searchpage_upgrade"];
-  if (upgrade) {
-    document.body.className = "searchpage_upgrade";
-    $("[name=btn_searchpage_upgrade]")[0].checked = true
-  }
+chrome.storage.local.get("setting_authorization_history", res => {
+  if (res["setting_authorization_history"] != "true") return;
+  $("input[name=btn_setting_authorization_history]")[0].checked = true;
 });
 chrome.storage.local.get(null, datas => {
   let hasRes = false;
@@ -137,14 +106,12 @@ chrome.storage.local.get(null, datas => {
       time = ""
     }
     let imgDom = `<img class="item-img favicon" src="${faviconURL(data.name)}/"/>`;
-    let groupHideBtn = `<img class="btn item-btn page_upgrade" data-key="${key}" name="btn_sites_ac_hide" src="/resource/hide.png" title="${i18n("msg_sites_hide")}" />`;
-    let groupHideNoBtn = `<img class="btn item-btn page_upgrade" data-key="${key}" name="btn_sites_hide" src="/resource/hide-no.png" title="${i18n("msg_sites_hide")}" />`;
     let groupIncognitoBtn = `<img class="btn item-btn" data-key="${key}" name="btn_sites_ac_incognito" src="/resource/incognito.png" title="${i18n("msg_sites_incognito")}" />`;
     let groupIncognitoNoBtn = `<img class="btn item-btn" data-key="${key}" name="btn_sites_incognito" src="/resource/incognito-no.png" title="${i18n("msg_sites_incognito")}" />`;
     let groupRemarkBtn = `<img class="btn item-btn ${data.remark && data.remark.length ? "has-remark" : ""}" data-key="${key}" name="btn_sites_remark" src="/resource/remark.png" title="${i18n("msg_sites_remark")}" />`;
     let textDom = `<div class="item-name text-ellipsis">${time}&nbsp;&nbsp;&nbsp;${data.name}</div>`;
     let groupDeleteBtn = `<img class="item-btn btn" name="btn_sites_delete" data-key="${key}" src="/resource/delete-x.png" />`;
-    let item = createNode(`<div data-rm="${data.rm}" data-hd="${data.hd}" class="item" title="${data.remark}">${imgDom}${textDom}${groupHideBtn}${groupHideNoBtn}${groupIncognitoBtn}${groupIncognitoNoBtn}${groupRemarkBtn}${groupDeleteBtn}</div>`);
+    let item = createNode(`<div data-rm="${data.rm}" data-hd="${data.hd}" class="item" title="${data.remark}">${imgDom}${textDom}${groupIncognitoBtn}${groupIncognitoNoBtn}${groupRemarkBtn}${groupDeleteBtn}</div>`);
     hasRes = true;
     $ListPanel.appendChild(item)
   }
@@ -158,39 +125,15 @@ document.body.addEventListener("click", e => {
   let div = target.parentElement;
   let name = target.getAttribute("name");
   let _key = target.getAttribute("data-key");
-  if (name === "btn_sites_delete") {
-    chrome.storage.local.remove(_key, () => {
-      if (chrome.runtime.lastError) {
-        alert(i18n("msg_err") + chrome.runtime.lastError.message)
-      } else {
-        target.parentElement.remove()
-      }
-    })
-  } else if (name === "btn_authorization_active") {
-    let reqUrl = $(".item-url", div)[0].value;
-    if (target.checked) {
-      chrome.permissions.request({
-        origins: [reqUrl]
-      }, granted => {
-        if (!granted) {
-          target.checked = false
-        }
-      });
-    } else {
-      chrome.permissions.remove({
-        origins: [reqUrl]
-      }, function (removed) {
-        if (!removed) {
-          target.checked = true
-        }
-      })
+  if (name === "btn_setting_authorization_newtab") {
+    if (!target.checked) {
+      chrome.storage.local.remove("setting_authorization_newtab");
+      return;
     }
-  } else if (name === "btn_searchpage_upgrade") {
-    let checked = $("[name=btn_searchpage_upgrade]")[0].checked;
-    chrome.storage.local.set({
-      setting_searchpage_upgrade: $("[name=btn_searchpage_upgrade]")[0].checked
-    });
-    document.body.className = checked ? "searchpage_upgrade" : "";
+    chrome.runtime.getManifest().chrome_url_overrides= {newtab: "main/page.html"};
+    chrome.runtime.restart();
+  } else if (name === "btn_sites_delete") {
+    chrome.storage.local.remove(_key)
   } else if (name === "btn_sites_remark") {
     setSiteRemark(_key, div);
   } else if (name === "btn_sites_ac_incognito") {
@@ -205,16 +148,16 @@ document.body.addEventListener("click", e => {
 });
 
 bind({
-  ui_title: i18n("ui_setting_title"),
-  ui_searchpage_upgrade: i18n("ui_setting_searchpage_upgrade"),
-  ui_authorization: i18n("ui_setting_authorization"),
-  ui_authorization_tips: i18n("ui_setting_authorization_tips"),
-  ui_sites: i18n("ui_setting_sites"),
-  ui_sites_tips: i18n("ui_setting_sites_tips"),
-  ui_setting_other: i18n("ui_setting_other"),
-  ui_setting_other_maxsize: i18n("ui_setting_other_maxsize"),
-  ui_about: i18n("ui_setting_about"),
-  ui_about_content: i18n("ui_setting_about_content")
+  ui_setting_title: i18n("ui_setting_title"),
+  ui_setting_authorization: i18n("ui_setting_authorization"),
+  ui_setting_authorization_newtab: i18n("ui_setting_authorization_newtab"),
+  ui_setting_authorization_history: i18n("ui_setting_authorization_history"),
+  ui_setting_sites: i18n("ui_setting_sites"),
+  ui_setting_sites_tips: i18n("ui_setting_sites_tips"),
+  ui_setting_general: i18n("ui_setting_general"),
+  ui_setting_general_maxsize: i18n("ui_setting_general_maxsize"),
+  ui_setting_about: i18n("ui_setting_about"),
+  ui_setting_about_content: i18n("ui_setting_about_content")
 }, document);
 
 chrome.storage.local.get("setting_list_size", res => {

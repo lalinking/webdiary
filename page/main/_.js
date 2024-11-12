@@ -30,14 +30,12 @@ const appendResult = (info) => {
   if ($group.length > 0) {
     $group = $group[0];
   } else {
-    let groupHideBtn = `<img class="btn page_upgrade" name="btn_sites_ac_hide" src="/resource/hide.png" title="${i18n("msg_sites_hide")}" />`;
-    let groupHideNoBtn = `<img class="btn page_upgrade" name="btn_sites_hide" src="/resource/hide-no.png" title="${i18n("msg_sites_hide")}" />`;
     let groupIncognitoBtn = `<img class="btn" name="btn_sites_ac_incognito" src="/resource/incognito.png" title="${i18n("msg_sites_incognito")}" />`;
     let groupIncognitoNoBtn = `<img class="btn" name="btn_sites_incognito" src="/resource/incognito-no.png" title="${i18n("msg_sites_incognito")}" />`;
     let groupDeleteBtn = `<img class="btn" name="btn_sites_delete" src="/resource/delete.png" title="${i18n("msg_sites_delete")}" />`;
     let groupRemarkBtn = `<img class="btn" name="btn_sites_remark" src="/resource/remark.png" title="${i18n("msg_sites_remark")}" />`;
     let favicon = `<img class="favicon" src="${faviconURL(info.url)}"/>`;
-    let groupTool = `<div class="tool-group-div">${groupHideBtn}${groupHideNoBtn}${groupIncognitoBtn}${groupIncognitoNoBtn}${groupDeleteBtn}${groupRemarkBtn}</div>`;
+    let groupTool = `<div class="tool-group-div">${groupIncognitoBtn}${groupIncognitoNoBtn}${groupDeleteBtn}${groupRemarkBtn}</div>`;
     $group = createNode(`<div class="content-group" name="group" data-groupname="${info.group}" id="${groupDivID}">${favicon}<span class="text-ellipsis">${info.group}</span>${groupTool}<div name='remark'></div></div>`);
     $contentDiv.appendChild($group);
     let key = getGroupStoreKey(info.group);
@@ -329,12 +327,6 @@ bind({
   ui_search: i18n("ui_search_placehold"),
   ui_sites_incognito_mode: i18n("ui_sites_incognito")
 }, document);
-chrome.storage.local.get("setting_searchpage_upgrade", res => {
-  let upgrade = res["setting_searchpage_upgrade"];
-  if (upgrade) {
-    document.body.className = "searchpage_upgrade"
-  }
-});
 let searchTimeout;
 $search.addEventListener("keyup", e => {
   if (e.keyCode < 65 && e.keyCode != 13 && e.keyCode != 8 && e.keyCode != 46)

@@ -97,42 +97,7 @@ function push() {
   })
 }
 
-let useSearchPageUpgrade;
-chrome.storage.local.get("setting_searchpage_upgrade", res => {
-  useSearchPageUpgrade = res["setting_searchpage_upgrade"];
-});
-
-// 已授权的网站，注入 content script
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (!useSearchPageUpgrade || !tab.url || changeInfo.status !== "loading")
-    return;
-  chrome.tabs.insertCSS(tabId, {
-    file: "/page/content_script/wd_tips.css",
-    runAt: "document_start"
-  });
-  chrome.tabs.executeScript(tabId, {
-    file: "/upgrade.js",
-    runAt: "document_start"
-  });
-  if (/^https?:\/\/[\w\.]+\.google\.com(\.\w+)?\/*search/.test(tab.url)) {
-    console.log("insert google search content script.");
-    chrome.tabs.executeScript(tabId, {
-      file: "/page/content_script/google.js",
-      runAt: "document_end"
-    });
-  } else if (/^https?:\/\/[\w\.]+\.bing\.com(\.\w+)?\/*search/.test(tab.url)) {
-    console.log("insert biying search content script.");
-    chrome.tabs.executeScript(tabId, {
-      file: "/page/content_script/bing.js",
-      runAt: "document_end"
-    });
-  }
-});
-
 chrome.storage.onChanged.addListener((info, area) => {
-  chrome.storage.local.get("setting_searchpage_upgrade", res => {
-    useSearchPageUpgrade = res["setting_searchpage_upgrade"];
-  });
   if ("local" != area || info.version)
     return;
   localVersion++;

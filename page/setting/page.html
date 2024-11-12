@@ -1,41 +1,46 @@
 <!DOCTYPE html>
-<html lang="en"><head>
+<html lang="en">
+<head>
     <link rel="shortcut icon" href="/resource/icon48.png" type="image/x-icon">
     <meta charset="UTF-8">
     <link href="/upgrade.css" type="text/css" rel="stylesheet">
     <link href="_.css" type="text/css" rel="stylesheet">
-<title name="ui_title"></title>
-</head><body>
-<div name="ui_title"></div>
+    <title name="ui_setting_title"></title>
+</head>
+<body>
+<div name="ui_setting_title"></div>
 <div style="overflow-y: auto;height: calc(100% - 2rem);">
-<div class="panel">
-<div name="ui_authorization" class="panel-title"></div>
-<div id="authorization" class="panel-content">
-<div style="margin: 1rem 0;">
-<div name="ui_searchpage_upgrade" class="setting_guide"></div>
-<input name="btn_searchpage_upgrade" type="checkbox" class="item-btn btn" />
-</div>
-<div name="ui_authorization_tips" class="panel-tips"></div>
-</div>
-</div>
-<div class="panel">
-<div name="ui_setting_other" class="panel-title"></div>
-<div class="panel-content">
-<div style="margin: 1rem 0;">
-<div name="ui_setting_other_maxsize" class="setting_txt"></div>
-<input name="value_setting_other_maxsize" type="number" class="item-value" />
-</div>
-</div>
-</div>
-<div class="panel">
-<div name="ui_sites" class="panel-title"></div>
-<div name="ui_sites_tips" class="panel-tips"></div>
-<div id="sites" class="panel-content"></div>
-</div>
-<div class="panel">
-<div name="ui_about" class="panel-title"></div>
-<div name="ui_about_content" class="panel-content panel-tips"></div>
-</div>
+    <div class="panel">
+        <div name="ui_setting_general" class="panel-title"></div>
+        <div class="panel-content">
+            <div class="item">
+                <div name="ui_setting_general_maxsize" class="item-name"></div>
+                <input name="value_setting_other_maxsize" style="width: 5rem;" type="number" class="item-value"/>
+            </div>
+        </div>
+    </div>
+<!--    <div class="panel">-->
+<!--        <div name="ui_setting_authorization" class="panel-title"></div>-->
+<!--        <div id="authorization" class="panel-content">-->
+<!--            <div class="item">-->
+<!--                <div name="ui_setting_authorization_newtab" class="item-name"></div>-->
+<!--                <input name="btn_setting_authorization_newtab" type="checkbox" class="item-btn btn"/>-->
+<!--            </div>-->
+<!--            <div class="item">-->
+<!--                <div name="ui_setting_authorization_history" class="item-name"></div>-->
+<!--                <input name="btn_setting_authorization_history" type="checkbox" class="item-btn btn"/>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+    <div class="panel">
+        <div name="ui_setting_sites" class="panel-title"></div>
+        <div name="ui_setting_sites_tips" class="panel-tips"></div>
+        <div id="sites" class="panel-content"></div>
+    </div>
+    <div class="panel">
+        <div name="ui_setting_about" class="panel-title"></div>
+        <div name="ui_setting_about_content" class="panel-content panel-tips"></div>
+    </div>
 </div>
 </body>
 <script src="/upgrade.js"></script>
