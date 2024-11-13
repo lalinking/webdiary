@@ -397,41 +397,58 @@ $(".setting-btn")[0].addEventListener("click", () => {
   location.href = "/page/setting/page.html" + location.search
 });
 document.addEventListener("keydown", e => {
-  if (e.target.tagName == "TEXTAREA" || (e.target.tagName == "INPUT" && e.keyCode == 13)) {
-    return;
-  }
-  if (e.keyCode !== 38 && e.keyCode !== 40 && e.keyCode !== 13) {
-    return $search.focus();
-  }
+  console.log(e);
+  if (e.target.tagName == "TEXTAREA" || (e.target.tagName == "INPUT" && e.keyCode == 13) || e.keyCode == 16) return;
+  if (e.keyCode !== 38 && e.keyCode !== 40 && e.keyCode !== 13 && e.keyCode !== 9) return $search.focus();
   clearTimeout(searchTimeout);
   let aList = [].slice.call($(".content-group:not(.large-group) div:not(.showmore) a, .content-group.large-group div:not(.content-item-more) a"));
-  if (aList.length === 0)
-    return;
+  if (aList.length == 0) return;
   let currentA = $("a:focus");
-  let currentIndex;
-  if (currentA.length === 1) {
-    for (let index = 0; index < aList.length; index++) {
-      let a = aList[index];
-      if (a === currentA[0]) {
-        currentIndex = index;
-        break
+  if (e.keyCode == 38 || e.keyCode == 40) { // 上下
+    let currentIndex;
+    if (currentA.length == 1) {
+      for (let index = 0; index < aList.length; index++) {
+        let a = aList[index];
+        if (a == currentA[0]) {
+          currentIndex = index;
+          break
+        }
+      }
+    } else {
+      currentIndex = -1
+    }
+    if (e.keyCode == 38) currentIndex = currentIndex < 1 ? aList.length - 1 : currentIndex - 1;
+    if (e.keyCode == 40) currentIndex = currentIndex > aList.length - 2 ? 0 : currentIndex + 1;
+    currentA = aList[currentIndex];
+  } else if (e.keyCode == 9) { // tab
+    let gList = [].slice.call($(".content-div .content-group"));
+    let currentGroupIndex;
+    if (currentA.length == 1) {
+      let currentGroup = currentA[0].parentElement.parentElement;
+      for (let index = 0; index < gList.length; index++) {
+        let g = gList[index];
+        if (g == currentGroup) {
+          currentGroupIndex = index;
+          break
+        }
+      }
+      if (e.shiftKey) {
+        currentGroupIndex = currentGroupIndex < 1 ? gList.length - 1 : currentGroupIndex - 1;
+      } else {
+        currentGroupIndex = currentGroupIndex > gList.length - 2 ? 0 : currentGroupIndex + 1;
+      }
+    } else {
+      if (e.shiftKey) {
+        currentGroupIndex = gList.length - 1;
+      } else {
+        currentGroupIndex = 0;
       }
     }
-  } else {
-    currentIndex = -1
+    currentA = $("a", gList[currentGroupIndex])[0];
   }
-  if (e.keyCode === 38 || e.keyCode == 13) { // 上
-    currentIndex = currentIndex < 1 ? aList.length - 1 : currentIndex - 1
-  } else if (e.keyCode === 40) { // 下
-    currentIndex = currentIndex > aList.length - 2 ? 0 : currentIndex + 1
-  }
-  if (e.keyCode == 13) {
-    setTimeout(() => {
-      aList[currentIndex].focus()
-    }, 4)
-  } else {
+  if (e.keyCode != 13) {
     event.preventDefault();
-    aList[currentIndex].focus()
+    currentA.focus()
   }
 });
 

@@ -149,9 +149,8 @@ document.body.addEventListener("click", e => {
 
 bind({
   ui_setting_title: i18n("ui_setting_title"),
-  ui_setting_authorization: i18n("ui_setting_authorization"),
-  ui_setting_authorization_newtab: i18n("ui_setting_authorization_newtab"),
-  ui_setting_authorization_history: i18n("ui_setting_authorization_history"),
+  ui_setting_hotkeys: i18n("ui_setting_hotkeys"),
+  ui_setting_hotkeys_desc: i18n("ui_setting_hotkeys_desc"),
   ui_setting_sites: i18n("ui_setting_sites"),
   ui_setting_sites_tips: i18n("ui_setting_sites_tips"),
   ui_setting_general: i18n("ui_setting_general"),
