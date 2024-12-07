@@ -1,6 +1,6 @@
 {
   "main_name": {"message": "Bookmark & History Manager"},
-  "main_desc": {"message": "An open-source plugin.\nQuickly search bookmarks and history.\nEasily manage browsing records and filter out unnecessary records on the search page."},
+  "main_desc": {"message": "An open-source plugin.\nQuickly search bookmarks and history."},
   "msg_more": {"message": "More records not displayed, please narrow the search range"},
   "msg_nores": {"message": "No records found"},
   "msg_succeed": {"message": "Successfully processed"},

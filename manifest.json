@@ -23,8 +23,5 @@
     "history",
     "storage",
     "favicon"
-  ],
-  "chrome_url_overrides": {
-    "newtab": "/page/main/page.html"
-  }
+  ]
 }

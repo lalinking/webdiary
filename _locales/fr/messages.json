@@ -1,6 +1,6 @@
 {
   "main_name": {"message": "Gestionnaire de favoris & d'historique"},
-  "main_desc": {"message": "Un plugin open-source.\nRecherchez rapidement vos favoris et l'historique.\nGérez facilement les enregistrements de navigation et filtrez les enregistrements inutiles sur la page de recherche."},
+  "main_desc": {"message": "Un plugin open-source.\nRecherchez rapidement vos favoris et l'historique."},
   "msg_more": {"message": "Plus d'enregistrements non affichés, veuillez réduire la plage de recherche"},
   "msg_nores": {"message": "Aucun enregistrement trouvé"},
   "msg_succeed": {"message": "Traitement réussi"},
