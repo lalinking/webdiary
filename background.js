@@ -1,118 +1,91 @@
 console.log("backgroud.js start");
 importScripts("lib/pako.min.js", "upgrade.js");
 // 解压
-function unzip(b64Data) {
-  let strData = atob(b64Data);
-  const charData = strData.split('').map(function (x) {
-    return x.charCodeAt(0);
-  });
-  const binData = new Uint8Array(charData);
-  const data = pako.inflate(binData);
-  strData = String.fromCharCode.apply(null, new Uint16Array(data));
-  return decodeURIComponent(strData);
+function unzip(remoteData) {
+    let strData = atob(remoteData);
+    let charData = strData.split('').map(function (x) { return x.charCodeAt(0) });
+    let binData = new Uint8Array(charData);
+    let data = pako.inflate(binData);
+    strData = String.fromCharCode.apply(null, new Uint16Array(data));
+    return decodeURIComponent(strData);
 }
 
 // 压缩
 function zip(str) {
-  const binaryString = pako.gzip(encodeURIComponent(str), {
-    to: 'string'
-  })
+    let binaryString = pako.gzip(encodeURIComponent(str), {to: 'string'});
     return btoa(binaryString);
 }
 
-let syncVersion, localVersion;
-let syncThread, syncTime = 0;
-
-function loadVersion() {
-  chrome.storage.sync.get("version", v => {
-    syncVersion = v.version || 0;
-    if (localVersion)
-      return onLoadVersion();
-    chrome.storage.local.get("version", v => {
-      localVersion = v.version || 0;
-      onLoadVersion()
+// 获取远端数据
+function getRemoteData() {
+    return new Promise((resolve, reject) => {
+        chrome.storage.sync.get(null, (result) => {
+            if (chrome.runtime.lastError) {
+                reject(chrome.runtime.lastError);
+            } else {
+                // 此时获得的是压缩内容，需要解压
+                let str = "";
+                for (let _i = 0; _i < (result.size || 0); _i++) {
+                    str += result["i" + _i];
+                }
+                let dataToLocal = JSON.parse(unzip(str));
+                resolve(dataToLocal);
+            }
+        });
     });
-  });
 }
 
-function onLoadVersion() {
-  console.log(`sync: ${syncVersion}, local: ${localVersion}`);
-  if (syncVersion == 0 && localVersion == 0) {
-    // 兼容设置，避免升级版本丢失数据
-    let dataToLocal = {};
-    chrome.storage.sync.get(null, _all => {
-      for (let _p in _all) {
-        let _d = _all[_p];
-        dataToLocal[_p] = {
-          name: _d.name,
-          rm: true,
-          remark: _d.disable ? "old black list" : "",
-          time: _d.time
+// 数据推送到远端
+function pushData(data) {
+    return new Promise((resolve, reject) => {
+        let str = zip(JSON.stringify(data));
+        let dataToSync = {
+            version: Date.now(),
+            size: Math.ceil(str.length / 8000)
+        };
+        for (let _l = 0; _l < dataToSync.size; _l++) {
+            dataToSync["i" + _l] = str.substr(_l * 8000, 8000)
         }
-      }
-      dataToLocal.size = undefined;
-      dataToLocal.version = 1;
-      chrome.storage.local.set(dataToLocal)
-    })
-  }
-  if (syncVersion > localVersion) {
-    // 本地版本号小，需要拉取远程数据
-    pull()
-  }
+        chrome.storage.sync.set(dataToSync, (result) => {
+            if (chrome.runtime.lastError) {
+                reject(chrome.runtime.lastError);
+            } else {
+                resolve();
+            }
+        });
+    });
 }
 
-function pull() {
-  console.log(`start pull, sync: ${syncVersion}, local: ${localVersion}`);
-  let str = "";
-  chrome.storage.sync.get(null, _all => {
-    for (let _i = 0; _i < (_all.size || 0); _i++) {
-      str += _all["i" + _i];
+chrome.storage.onChanged.addListener((changes, area) => {
+    console.log(`storage changed at ${area}: [${changes}]`);
+    if (area == "local") {
+        getRemoteData()
+          .then(data => {
+              for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
+                  data[key] = newValue;
+              }
+              return data;
+          })
+          .then(pushData)
+          .then(() => {
+              console.log("push 成功！");
+          })
+          .catch((error) => {
+              console.error("push 出错: ", error);
+          });
+    } else if (area == "sync") {
+        getRemoteData()
+          .then(setLocalData)
+          .then(() => {
+              console.log("pull 成功！");
+          })
+          .catch((error) => {
+              console.error("pull 出错: ", error);
+          });
     }
-    localVersion = _all.version;
-    let dataToLocal = JSON.parse(unzip(str));
-    dataToLocal.version = _all.version;
-    chrome.storage.local.clear(() => {
-      chrome.storage.local.set(dataToLocal)
-    })
-  })
-}
-
-function push() {
-  chrome.storage.local.get(null, _all => {
-    console.log(`start push, sync: ${syncVersion}, local: ${localVersion}`);
-    _all.version = undefined;
-    let str = zip(JSON.stringify(_all));
-    let dataToSync = {
-      version: localVersion,
-      size: Math.ceil(str.length / 8000)
-    };
-
-    for (let _l = 0; _l < dataToSync.size; _l++) {
-      dataToSync["i" + _l] = str.substr(_l * 8000, 8000)
-    }
-    syncTime = Date.now();
-    chrome.storage.sync.clear(() => {
-      chrome.storage.sync.set(dataToSync)
-    })
-  })
-}
-
-chrome.storage.onChanged.addListener((info, area) => {
-  if ("local" != area || info.version)
-    return;
-  localVersion++;
-  clearTimeout(syncThread);
-  chrome.storage.local.set({
-    version: localVersion
-  });
-  if (Date.now() - syncTime < 60000) {
-    // 同步间隔太小
-    syncThread = setTimeout(push, 60000)
-  } else {
-    push()
-  }
 });
 
+// 根据配置自动删除历史记录
 chrome.history.onVisited.addListener(info => {
   let storeKey = getGroupStoreKey(getUrlGroupName(info.url));
   chrome.storage.local.get(storeKey, res => {
@@ -127,6 +100,4 @@ chrome.history.onVisited.addListener(info => {
   })
 });
 
-loadVersion();
-// 每隔一段时间拉取一下远程的版本，防止覆盖
-setInterval(loadVersion, 60000)
+

@@ -39,21 +39,26 @@ const appendResult = (info) => {
     $group = createNode(`<div class="content-group" name="group" data-groupname="${info.group}" id="${groupDivID}">${favicon}<span class="text-ellipsis">${info.group}</span>${groupTool}<div name='remark'></div></div>`);
     $contentDiv.appendChild($group);
     let key = getGroupStoreKey(info.group);
-    chrome.storage.local.get(key, res => {
-      let g = res[key];
-      if (!g)
-        return;
-      if (g.rm) {
-        $group.setAttribute("data-rm", "true");
-        $group.setAttribute("title", i18n("msg_sites_incognito"));
-      }
-      if (g.hd) {
-        $group.setAttribute("data-hd", "true");
-        $group.setAttribute("title", i18n("msg_sites_incognito"));
-      }
-      if (g.remark)
-        $("[name=remark]", $group)[0].innerHTML = g.remark;
-    })
+    getLocalData(key)
+      .then(res => {
+          let g = res[key];
+          if (!g)
+              return;
+          if (g.rm) {
+              $group.setAttribute("data-rm", "true");
+              $group.setAttribute("data-rm", "true");
+              $group.setAttribute("title", i18n("msg_sites_incognito"));
+          }
+          if (g.hd) {
+              $group.setAttribute("data-hd", "true");
+              $group.setAttribute("title", i18n("msg_sites_incognito"));
+          }
+          if (g.remark)
+              $("[name=remark]", $group)[0].innerHTML = g.remark;
+      })
+      .catch(error => {
+          console.error("获取本地存储数据出错:", error);
+      });
   }
   setBrowseInfo(info, () => {
     if (info.lastVisitTime) {
@@ -192,46 +197,42 @@ const removeMarkbook = (info, target) => {
   })
 };
 const setSiteIncognito = (groupName, groupDiv, ifrm) => {
-  let key = getGroupStoreKey(groupName);
-  chrome.storage.local.get(key, res => {
-    let _obj = res[key] || {
-      name: groupName,
-      remark: ""
-    };
-    _obj.key = key;
-    _obj.rm = ifrm ? true : undefined;
-    _obj.time = _obj.time || new Date().format("yyyy-MM-dd HH:mm:ss");
-    let _store = {};
-    _store[key] = _obj;
-    chrome.storage.local.set(_store, () => {
-      if (chrome.runtime.lastError) {
-        alert(i18n("msg_err") + chrome.runtime.lastError.message)
-      } else {
-        groupDiv.setAttribute("data-rm", ifrm ? "true" : "false");
-      }
-    })
-  })
+    let key = getGroupStoreKey(groupName);
+    getLocalData(key)
+      .then(res => {
+          let _obj = res[key] || {
+              name: groupName,
+              remark: ""
+          };
+          _obj.key = key;
+          _obj.rm = ifrm? true : undefined;
+          _obj.time = _obj.time || new Date().format("yyyy-MM-dd HH:mm:ss");
+          let _store = {};
+          _store[key] = _obj;
+          return _store;
+      })
+      .then(_store => setLocalData(_store))
+      .then(() => {groupDiv.setAttribute("data-rm", ifrm? "true" : "false")})
+      .catch(error => { alert(i18n("msg_err") + error.message)});
 };
 const setSiteHide = (groupName, groupDiv, ifhd) => {
-  let key = getGroupStoreKey(groupName);
-  chrome.storage.local.get(key, res => {
-    let _obj = res[key] || {
-      name: groupName,
-      remark: ""
-    };
-    _obj.key = key;
-    _obj.hd = ifhd ? true : undefined;
-    _obj.time = _obj.time || new Date().format("yyyy-MM-dd HH:mm:ss");
-    let _store = {};
-    _store[key] = _obj;
-    chrome.storage.local.set(_store, () => {
-      if (chrome.runtime.lastError) {
-        alert(i18n("msg_err") + chrome.runtime.lastError.message)
-      } else {
-        groupDiv.setAttribute("data-hd", ifhd ? "true" : "false");
-      }
-    })
-  })
+    let key = getGroupStoreKey(groupName);
+    getLocalData(key)
+     .then(res => {
+         let _obj = res[key] || {
+             name: groupName,
+             remark: ""
+         };
+         _obj.key = key;
+         _obj.hd = ifhd? true : undefined;
+         _obj.time = _obj.time || new Date().format("yyyy-MM-dd HH:mm:ss");
+         let _store = {};
+         _store[key] = _obj;
+         return _store;
+     })
+     .then(_store => setLocalData(_store))
+     .then(() => {groupDiv.setAttribute("data-hd", ifhd? "true" : "false")})
+     .catch(error => {alert(i18n("msg_err") + error.message)});
 };
 const removeHistory = (info, itemDiv) => {
   chrome.history.deleteUrl({
@@ -280,57 +281,54 @@ const removeSiteHistory = (groupName, groupDiv) => {
   async.call(clearFun);
 };
 const setSiteRemark = (groupName, groupDiv) => {
-  if ($(".remark_editor", groupDiv).length > 0) {
-    return;
-  }
-  let _remark = "";
-  let _remarkDiv = $("[name='remark']", groupDiv)[0];
-  _remark = _remarkDiv.innerText;
-  _remarkDiv.className = "hide";
-  let _remarkArea = document.createElement("textarea");
-  _remarkArea.className = "remark_editor";
-  _remarkArea.value = _remark;
-  groupDiv.insertBefore(_remarkArea, groupDiv.children[2]);
-  _remarkArea.style.height = _remarkArea.scrollHeight + "px";
-  _remarkArea.addEventListener("input", e => {
-    _remarkArea.style.height = 'auto';
+    if ($(".remark_editor", groupDiv).length > 0) {return}
+    let _remark = "";
+    let _remarkDiv = $("[name='remark']", groupDiv)[0];
+    _remark = _remarkDiv.innerText;
+    _remarkDiv.className = "hide";
+    let _remarkArea = document.createElement("textarea");
+    _remarkArea.className = "remark_editor";
+    _remarkArea.value = _remark;
+    groupDiv.insertBefore(_remarkArea, groupDiv.children[2]);
     _remarkArea.style.height = _remarkArea.scrollHeight + "px";
-  });
-  _remarkArea.addEventListener("blur", e => {
-    let key = getGroupStoreKey(groupName);
-    chrome.storage.local.get(key, res => {
-      let _obj = res[key] || {
-        name: groupName,
-        remark: ""
-      };
-      _obj.key = key;
-      _obj.remark = _remarkArea.value ? _remarkArea.value : undefined;
-      _obj.time = _obj.time || new Date().format("yyyy-MM-dd HH:mm:ss");
-      let _store = {};
-      _store[key] = _obj;
-      chrome.storage.local.set(_store, () => {
-        if (chrome.runtime.lastError) {
-          alert(i18n("msg_err") + chrome.runtime.lastError.message)
-        } else {
-          _remarkDiv.innerHTML = _remarkArea.value;
-          _remarkDiv.className = "";
-          _remarkArea.remove();
-          showInfo(i18n("msg_succeed"));
-        }
-      })
+    _remarkArea.addEventListener("input", e => {
+        _remarkArea.style.height = 'auto';
+        _remarkArea.style.height = _remarkArea.scrollHeight + "px";
     });
-  });
-  _remarkArea.focus();
+    _remarkArea.addEventListener("blur", e => {
+        let key = getGroupStoreKey(groupName);
+        getLocalData(key)
+          .then(res => {
+              let _obj = res[key] || {
+                  name: groupName,
+                  remark: ""
+              };
+              _obj.key = key;
+              _obj.remark = _remarkArea.value? _remarkArea.value : undefined;
+              _obj.time = _obj.time || new Date().format("yyyy-MM-dd HH:mm:ss");
+              let _store = {};
+              _store[key] = _obj;
+              return _store;
+          })
+          .then(_store => setLocalData(_store))
+          .then(() => {
+              _remarkDiv.innerHTML = _remarkArea.value;
+              _remarkDiv.className = "";
+              _remarkArea.remove();
+              showInfo(i18n("msg_succeed"));
+          })
+          .catch(error => {alert(i18n("msg_err") + error.message)});
+    });
+    _remarkArea.focus();
 };
 // 添加一些事件、初始化页面
 bind({
-  ui_search: i18n("ui_search_placehold"),
-  ui_sites_incognito_mode: i18n("ui_sites_incognito")
+    ui_search: i18n("ui_search_placehold"),
+    ui_sites_incognito_mode: i18n("ui_sites_incognito")
 }, document);
 let searchTimeout;
 $search.addEventListener("keyup", e => {
-  if (e.keyCode < 65 && e.keyCode != 13 && e.keyCode != 8 && e.keyCode != 46)
-    return;
+  if (e.keyCode < 65 && e.keyCode != 13 && e.keyCode != 8 && e.keyCode != 46) return;
   clearTimeout(searchTimeout);
   if (e.keyCode == 13) {
     if (e.altKey && $search.value) {
@@ -453,10 +451,12 @@ document.addEventListener("keydown", e => {
 });
 
 $search.focus();
-chrome.storage.local.get("setting_list_size", res => {
-  let _size = res["setting_list_size"];
-  if (_size) {
-    resListSize = parseInt(_size) || 50;
-  }
-  setTimeout(search, 50);
-});
+getLocalData("setting_list_size")
+.then(res => {
+    let _size = res["setting_list_size"];
+    if (_size) {
+        resListSize = parseInt(_size) || 80;
+    }
+    setTimeout(search, 80);
+})
+.catch(error => {console.error("获取 setting_list_size 数据出错:", error)});

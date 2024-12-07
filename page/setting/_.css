@@ -25,7 +25,6 @@
 }
 .panel-tips {
   white-space: pre-wrap;
-  font-size: 0.6rem;
   color: #ff4b00cf;
   padding: 0.4rem 1.5rem;
 }
@@ -85,7 +84,6 @@
   font-size: 0.85rem;
   box-sizing: border-box;
   vertical-align: top;
-  box-shadow: 0 0 3px 0 grey;
 }
 
 .item-name, .item-url {

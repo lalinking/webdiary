@@ -8,6 +8,10 @@
   border-radius: 3px;
 }
 
+img:error {
+    display: none;
+}
+
 html {
   font-size: 16px;
 }
