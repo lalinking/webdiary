@@ -28,6 +28,7 @@ function getRemoteData() {
                 for (let _i = 0; _i < (result.size || 0); _i++) {
                     str += result["i" + _i];
                 }
+                if (!str.length) {return resolve({})}
                 let dataToLocal = JSON.parse(unzip(str));
                 resolve(dataToLocal);
             }
